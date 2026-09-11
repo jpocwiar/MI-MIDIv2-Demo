@@ -1,192 +1,64 @@
 <!doctype html>
-<html lang="en">
+<html lang="pl">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta
       name="description"
-      content="A listening demo of sparse-autoencoder feature interventions in a symbolic music model."
+      content="Atlas interwencji w cechy rzadkiego autoenkodera modeli generujących muzykę symboliczną."
     >
-    <title>MI-MIDI v2 · SAE Feature Steering</title>
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="styles.css">
+    <title>Atlas cech SAE — muzyka symboliczna</title>
   </head>
   <body>
-    <main class="shell">
-      <header class="hero">
-        <p class="eyebrow">MI-MIDI v2 · sparse autoencoders</p>
-        <h1>Steering symbolic music through learned features</h1>
-        <p class="lede">
-          Selected causal interventions in features extracted from a text-to-MIDI
-          transformer. Listen to the same prompt without intervention, with the SAE
-          feature amplified, and with a matched random direction.
-        </p>
-        <p class="author">Jakub Poćwiardowski · Warsaw University of Technology</p>
-      </header>
+    <header class="hero">
+      <div class="language-switch" aria-label="Language">
+        <button class="language-button" type="button" data-language="pl">PL</button>
+        <button class="language-button" type="button" data-language="en">EN</button>
+      </div>
+      <div class="eyebrow" data-text="heroEyebrow"></div>
+      <h1 data-text="heroTitle"></h1>
+      <p class="lead" data-text="heroLead"></p>
+      <div class="stats">
+        <div class="stat"><b>80</b><span data-text="statFeatures"></span></div>
+        <div class="stat"><b>15</b><span data-text="statMuspy"></span></div>
+        <div class="stat"><b>27</b><span data-text="statInstruments"></span></div>
+        <div class="stat"><b>48</b><span data-text="statQualitative"></span></div>
+        <div class="stat"><b>3</b><span data-text="statDoses"></span></div>
+      </div>
+    </header>
 
-      <section class="explainer" aria-label="Conditions used in the comparison">
-        <article>
-          <span class="condition-mark baseline-mark">B</span>
-          <div><strong>Baseline</strong><small>No activation intervention</small></div>
-        </article>
-        <article>
-          <span class="condition-mark feature-mark">F</span>
-          <div><strong>SAE feature</strong><small>The selected feature is amplified</small></div>
-        </article>
-        <article>
-          <span class="condition-mark random-mark">R</span>
-          <div><strong>Random control</strong><small>A matched-norm random direction</small></div>
-        </article>
-      </section>
+    <section class="method">
+      <details>
+        <summary data-text="methodSummary"></summary>
+        <div class="method-grid" id="methodGrid"></div>
+      </details>
+    </section>
 
-      <section class="showcase" aria-labelledby="showcase-title">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Ten case studies</p>
-            <h2 id="showcase-title">Choose a learned feature</h2>
-          </div>
-          <p>All interventions use the p90 activation dose.</p>
+    <div class="toolbar">
+      <div class="filters">
+        <input id="search" type="search">
+        <select id="category"></select>
+        <select id="model"></select>
+        <select id="status"></select>
+        <span id="result-count"></span>
+        <div class="toolbar-language" aria-label="Language">
+          <button class="language-button" type="button" data-language="pl">PL</button>
+          <button class="language-button" type="button" data-language="en">EN</button>
         </div>
+      </div>
+    </div>
 
-        <nav class="feature-tabs" id="featureTabs" aria-label="SAE features"></nav>
-
-        <article class="feature-panel" aria-live="polite">
-          <header class="feature-header">
-            <div>
-              <div class="badges">
-                <span class="badge" id="featureKind"></span>
-                <span class="badge status" id="featureStatus"></span>
-              </div>
-              <h2 id="featureTitle"></h2>
-              <p class="feature-id" id="featureId"></p>
-            </div>
-            <p class="hypothesis" id="featureHypothesis"></p>
-          </header>
-
-          <blockquote class="prompt">
-            <span>Generation prompt</span>
-            <p id="featurePrompt"></p>
-          </blockquote>
-
-          <div class="comparison-grid" id="comparisonGrid"></div>
-
-          <div class="results-grid">
-            <section class="result-card">
-              <p class="eyebrow">Selected example</p>
-              <h3>What changed here?</h3>
-              <div class="metric-table-wrap">
-                <table class="metric-table">
-                  <thead>
-                    <tr>
-                      <th>Measure</th>
-                      <th>Baseline</th>
-                      <th>Feature</th>
-                      <th>Random</th>
-                    </tr>
-                  </thead>
-                  <tbody id="sampleMetrics"></tbody>
-                </table>
-              </div>
-            </section>
-
-            <section class="result-card aggregate-card">
-              <p class="eyebrow" id="aggregateLabel">All 10 carrier prompts</p>
-              <h3>Aggregate evidence</h3>
-              <p id="aggregateEvidence"></p>
-              <p class="caveat" id="featureCaveat"></p>
-            </section>
-          </div>
-        </article>
-      </section>
-
-      <section class="library-section" aria-labelledby="library-title">
-        <div class="library-heading">
-          <div>
-            <p class="eyebrow">Complete intervention library</p>
-            <h2 id="library-title">Explore all 80 SAE features</h2>
-          </div>
-          <p>
-            Every feature includes its strongest carrier and all three doses.
-            The ten highlighted features include all ten carrier prompts.
-          </p>
-        </div>
-
-        <div class="library-toolbar">
-          <label class="search-field">
-            <span>Search</span>
-            <input id="librarySearch" type="search" placeholder="Feature, model, description…">
-          </label>
-          <label>
-            <span>Evidence type</span>
-            <select id="libraryGroup">
-              <option value="all">All types</option>
-              <option value="semantic">Qualitative</option>
-              <option value="instrument">Instrument</option>
-              <option value="muspy">MusPy</option>
-            </select>
-          </label>
-          <label>
-            <span>Model</span>
-            <select id="libraryModel">
-              <option value="all">Both models</option>
-              <option value="text2midi">text2midi</option>
-              <option value="midi_llm">MIDI-LLM</option>
-            </select>
-          </label>
-          <p class="library-count" id="libraryCount"></p>
-        </div>
-
-        <div class="library-layout">
-          <nav class="library-list" id="libraryList" aria-label="Full feature library"></nav>
-
-          <article class="library-viewer">
-            <header class="library-viewer-header">
-              <div class="badges" id="libraryBadges"></div>
-              <h2 id="libraryFeatureTitle"></h2>
-              <p class="feature-id" id="libraryFeatureId"></p>
-            </header>
-
-            <div class="library-controls">
-              <label>
-                <span>Carrier prompt</span>
-                <select id="libraryPrompt"></select>
-              </label>
-              <div>
-                <span>Intervention dose</span>
-                <div class="dose-buttons" id="libraryDoses"></div>
-              </div>
-            </div>
-
-            <blockquote class="prompt library-prompt">
-              <span>Generation prompt</span>
-              <p id="libraryPromptText"></p>
-            </blockquote>
-
-            <div class="comparison-grid library-comparison" id="libraryComparison"></div>
-            <section class="library-evidence" id="libraryEvidence"></section>
-          </article>
-        </div>
-      </section>
-
-      <section class="disclosure">
-        <div>
-          <p class="eyebrow">How to read this demo</p>
-          <h2>Illustrations, not the statistical test</h2>
-        </div>
-        <p>
-          The displayed carrier for each feature was selected after analysis because
-          it makes the intended effect especially visible. The statistical summaries
-          use all available carrier prompts and paired random controls. All examples
-          except the sawtooth-program intervention remain exploratory; the four
-          qualitative candidates come from a blinded piano-roll review whose aggregate
-          result was null. Piano rolls are coloured by MIDI program. Audio was
-          synthesized from the generated MIDI and independently peak-normalized.
-        </p>
-      </section>
+    <main>
+      <p class="availability-note" data-text="availabilityNote"></p>
+      <div id="cards"></div>
     </main>
 
-    <footer>
-      <p>MI-MIDI v2 · Mechanistic interpretability of symbolic music models</p>
-      <a href="SOUNDFONT_LICENSE.md">Audio attribution</a>
+    <footer class="footer">
+      <button class="export" id="export" data-text="exportButton"></button>
+      <p data-text="footerAudio"></p>
+      <p data-text="footerIdentity"></p>
     </footer>
 
     <script src="library.js"></script>

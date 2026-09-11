@@ -1,485 +1,526 @@
-const features = [
-  {
-    id: "electric-piano",
-    tabLabel: "Electric Piano 1",
-    tabMeta: "instrument · feature 995",
-    kind: "Instrument feature",
-    status: "Exploratory",
-    title: "Electric Piano 1",
-    identity: "text2midi · decoder layer 16 · SAE feature 995",
-    hypothesis:
-      "Amplifying this feature should increase the contribution of GM program 4 (Electric Piano 1), rather than merely make it appear once.",
-    prompt: "A simple piano piece with a clear melody",
-    path: "samples/electric-piano",
-    aggregateLabel: "All 10 carrier prompts",
-    metrics: [
-      ["Target-program note share", "0.0%", "55.0%", "0.0%"],
-      ["Target-program duration share", "0.0%", "60.9%", "0.0%"],
+const DATA = window.SAE_LIBRARY.cards;
+
+const I18N = {
+  pl: {
+    pageTitle: "Atlas cech SAE — muzyka symboliczna",
+    heroEyebrow: "Mechanistyczna interpretowalność generacji MIDI",
+    heroTitle: "Atlas interwencji w cechy SAE",
+    heroLead:
+      "Porównaj tę samą generację bez interwencji, po wzmocnieniu kierunku cechy oraz po równie silnej zmianie w losowym kierunku. Wyróżnione karty pokazują najbardziej czytelne studia przypadków, a pełny atlas obejmuje wszystkie badane cechy.",
+    statFeatures: "unikalnych cech",
+    statMuspy: "cech wybranych przez MusPy",
+    statInstruments: "cech instrumentacyjnych",
+    statQualitative: "hipotez jakościowych",
+    statDoses: "poziomy siły interwencji",
+    methodSummary: "Jak czytać porównania?",
+    method: [
+      ["Generacja bazowa", "Model generuje bez zmiany aktywacji. Stanowi punkt odniesienia dla tego samego promptu i ziarna."],
+      ["Kierunek cechy SAE", "Na każdym kroku aktywacja jest podnoszona co najmniej do percentyla p50, p75 albo p90 jej naturalnych dodatnich aktywacji."],
+      ["Kontrola losowa", "Do modelu wprowadzana jest zmiana o dopasowanej normie, ale w kierunku ortogonalnym do kolumny dekodera cechy."],
+      ["Wielkość efektu", "Dla instrumentów pokazano obecność oraz udział nut i czasu trwania. Dla MusPy podano zmianę metryki względem generacji bazowej i kontroli losowej."],
+      ["Najlepszy prompt", "Domyślny prompt wybrano po analizie jako ten, na którym cecha najsilniej realizowała oczekiwany kierunek zmiany względem obu kontroli."],
+      ["Hipotezy jakościowe", "Zamrożone opisy cech pozostawiono w ich oryginalnym angielskim brzmieniu, aby tłumaczenie nie zmieniało treści ocenianej w eksperymencie."],
     ],
-    aggregate:
-      "Across all ten prompts at p90, Electric Piano 1 accounted for 18.1% of notes and 22.7% of note duration under the feature intervention, versus 0.3% / 2.2% at baseline and 0.7% / 0.8% for the random control.",
-    caveat:
-      "Screen-positive, but not significant after correction over the full instrument screen (raw one-sided p = 0.031 for the continuous contrasts; adjusted q = 0.844).",
+    searchPlaceholder: "Szukaj cechy, instrumentu lub metryki…",
+    categories: [["all", "Wszystkie kategorie"], ["muspy", "Metryki MusPy"], ["instrument", "Instrumenty GM"], ["semantic", "Hipotezy jakościowe"]],
+    models: [["all", "Oba modele"], ["midi_llm", "MIDI-LLM"], ["text2midi", "text2midi"]],
+    statuses: [["all", "Wszystkie statusy"], ["replicated", "Zreplikowana"], ["screen_positive", "Sygnał w przesiewie"], ["reviewed", "Oceniona jakościowo"], ["not_confirmed", "Bez potwierdzenia"]],
+    availabilityNote: "* Dla tej cechy udostępniono jeden, najlepiej sterujący prompt; wszystkie trzy poziomy siły interwencji są dostępne.",
+    exportButton: "Eksportuj moje oceny (JSON)",
+    footerAudio:
+      'Audio zsyntetyzowano za pomocą FluidSynth i MuseScore_General.sf3 0.2, udostępnionego na licencji MIT. Każdy plik normalizowano niezależnie, dlatego głośność nie jest porównywalnym wynikiem. Pełne informacje zawiera <a href="SOUNDFONT_LICENSE.md">nota licencyjna</a>.',
+    footerIdentity:
+      "Identyfikator liczbowy cechy ma znaczenie wyłącznie razem z modelem i checkpointem SAE. „Sygnał w przesiewie” nie oznacza formalnego potwierdzenia po korekcie wielokrotnych porównań.",
+    featuredHeading: "Wyróżnione studia przypadków",
+    featuredIntro: "Przykłady wybrane ze względu na czytelność efektu; pełne statystyki obejmują wszystkie dostępne prompty.",
+    atlasHeading: "Pozostałe cechy",
+    atlasIntro: "Pełny materiał przesiewowy, niezależnie od wyniku testu.",
+    groups: { muspy: "MusPy", instrument: "instrument GM", semantic: "hipoteza jakościowa" },
+    status: { replicated: "zreplikowana przyczynowo", confirmed: "potwierdzona", screen_positive: "sygnał w przesiewie", reviewed: "oceniona jakościowo", awaiting_review: "do oceny", not_confirmed: "brak formalnego potwierdzenia" },
+    expand: "Rozwiń",
+    collapse: "Zwiń",
+    featuredBadge: "wyróżniony przykład",
+    layer: "warstwa",
+    feature: "cecha",
+    prompt: "Prompt",
+    strength: "Siła",
+    baseline: "Bez interwencji",
+    semantic: "Kierunek cechy SAE",
+    random: "Dopasowany kierunek losowy",
+    downloadMp3: "Pobierz MP3",
+    downloadMidi: "Pobierz MIDI",
+    selectedMeasurement: "Pomiar dla wybranego przykładu",
+    measure: "wielkość",
+    baseShort: "bazowa",
+    saeShort: "SAE",
+    randomShort: "losowa",
+    dose: "dawka",
+    deltaBase: "Δ baza",
+    deltaRandom: "Δ losowa",
+    presence: "obecność: bazowa / SAE / losowa",
+    noteShare: "udział nut: bazowa / SAE / losowa",
+    durationShare: "udział czasu: bazowa / SAE / losowa",
+    qualitativeHypothesis: "Hipoteza jakościowa",
+    muspyMetric: "Metryka MusPy",
+    instrumentHypothesis: "Hipoteza instrumentalna",
+    causalReplication: "Replikacja przyczynowa",
+    possibleConfound: "Możliwe pomieszanie",
+    observationalValidation: "walidacja obserwacyjna",
+    safeAudit: "audyt bez ostrzeżeń",
+    yes: "tak",
+    no: "nie",
+    expectedIncrease: "oczekiwany wzrost",
+    expectedDecrease: "oczekiwany spadek",
+    atP90: "Przy p90",
+    expectedChange: "zmiana zgodna z hipotezą",
+    versusBase: "względem bazy",
+    versusRandom: "względem kontroli",
+    standardized: "efekt standaryzowany",
+    blindedReview: "zaślepiona ocena przyczynowa",
+    saeRecognized: "rozpoznano kierunek SAE",
+    randomRecognized: "wskazano kontrolę losową",
+    tie: "remis",
+    neither: "żaden wariant",
+    unavailable: "ocena niedostępna",
+    confidence: "pewność",
+    carrierSigns: "prompty SAE/remis/losowa",
+    activeHeldout: "aktywne przykłady odłożone",
+    distractors: "dystraktory",
+    confirmed: "potwierdzona",
+    ratingSummary: "Moja ocena odsłuchowa (zapisywana tylko w tej przeglądarce)",
+    ratingPlaceholder: "— wybierz ocenę —",
+    ratingOptions: [["aligned", "zmiana zgodna z hipotezą"], ["partial", "częściowo zgodna"], ["ambiguous", "niejednoznaczna"], ["misaligned", "niezgodna"], ["degenerate", "głównie degeneracja"]],
+    notePlaceholder: "Notatka…",
+    featureCount: "cech",
   },
-  {
-    id: "pitch-entropy",
-    tabLabel: "Pitch diversity",
-    tabMeta: "MusPy · feature 1015",
-    kind: "MusPy feature",
-    status: "Exploratory",
-    title: "Pitch entropy",
-    identity: "text2midi · decoder layer 8 · SAE feature 1015",
-    hypothesis:
-      "Amplifying this feature should broaden the distribution of generated pitches, measured as higher MusPy pitch entropy.",
-    prompt: "A short piece for solo piano with gentle phrasing",
-    path: "samples/pitch-entropy",
-    aggregateLabel: "All 10 carrier prompts",
-    metrics: [["Pitch entropy", "4.216", "5.121", "3.807"]],
-    aggregate:
-      "Across all ten prompts at p90, mean pitch entropy was 4.509 with the feature intervention, 4.238 at baseline and 4.090 for the random control: +0.271 versus baseline and +0.418 versus random.",
-    caveat:
-      "The direction agrees with the held-out observational correlation, but remains exploratory after correction across the MusPy hypotheses (raw p = 0.030; adjusted q = 0.727).",
-  },
-  {
-    id: "sawtooth",
-    tabLabel: "Sawtooth lead",
-    tabMeta: "instrument · feature 3340",
-    kind: "Instrument feature",
-    status: "Replicated",
-    title: "Lead 2 (sawtooth)",
-    identity: "text2midi · decoder layer 13 · SAE feature 3340",
-    hypothesis:
-      "Amplifying this feature should induce GM program 81, Lead 2 (sawtooth), associated observationally with electronic instrumentation.",
-    prompt: "A calm instrumental piece for piano and flute",
-    path: "samples/sawtooth",
-    aggregateLabel: "All 10 new carrier prompts",
-    metrics: [
-      ["Target-program note share", "0.0%", "11.1%", "0.0%"],
-      ["Target-program duration share", "0.0%", "25.0%", "0.0%"],
+  en: {
+    pageTitle: "SAE feature atlas — symbolic music",
+    heroEyebrow: "Mechanistic interpretability of MIDI generation",
+    heroTitle: "SAE feature intervention atlas",
+    heroLead:
+      "Compare the same generation without intervention, after amplifying a learned feature direction, and after an equally strong change in a random direction. Highlighted cards show the clearest case studies; the full atlas includes every tested feature.",
+    statFeatures: "unique features",
+    statMuspy: "MusPy-selected features",
+    statInstruments: "instrument features",
+    statQualitative: "qualitative hypotheses",
+    statDoses: "intervention strengths",
+    methodSummary: "How should the comparisons be read?",
+    method: [
+      ["Baseline generation", "The model generates without changing its activations. This is the reference for the same prompt and random seed."],
+      ["SAE feature direction", "At each step, feature activation is raised to at least the p50, p75 or p90 percentile of its natural positive activations."],
+      ["Random control", "The model receives a matched-norm change in a direction orthogonal to the feature decoder column."],
+      ["Effect size", "Instrument hypotheses report presence, note share and duration share. MusPy hypotheses report change relative to both baseline and random control."],
+      ["Strongest carrier", "The default carrier was selected after analysis as the prompt on which the feature most strongly produced the expected change relative to both controls."],
+      ["Qualitative hypotheses", "Frozen feature descriptions are shown in their original English wording so that translation cannot alter what was evaluated in the experiment."],
     ],
-    aggregate:
-      "On ten new prompts at p90, the sawtooth program appeared in 6/10 feature-intervention generations and 0/10 random controls. Its mean share was 6.6% of notes and 7.7% of note duration, versus zero in both controls.",
-    caveat:
-      "This induction independently replicated the earlier result (exact one-sided p = 0.0156). The program is reliably introduced, but does not dominate every generated excerpt.",
+    searchPlaceholder: "Search by feature, instrument or metric…",
+    categories: [["all", "All categories"], ["muspy", "MusPy metrics"], ["instrument", "GM instruments"], ["semantic", "Qualitative hypotheses"]],
+    models: [["all", "Both models"], ["midi_llm", "MIDI-LLM"], ["text2midi", "text2midi"]],
+    statuses: [["all", "All statuses"], ["replicated", "Replicated"], ["screen_positive", "Screen-positive"], ["reviewed", "Qualitatively reviewed"], ["not_confirmed", "Not confirmed"]],
+    availabilityNote: "* One strongest carrier prompt is available for this feature; all three intervention strengths are included.",
+    exportButton: "Export my ratings (JSON)",
+    footerAudio:
+      'Audio was synthesized with FluidSynth and MuseScore_General.sf3 0.2, distributed under the MIT license. Files were normalized independently, so loudness is not a comparable outcome. See the <a href="SOUNDFONT_LICENSE.md">full attribution notice</a>.',
+    footerIdentity:
+      "A numeric feature identifier is meaningful only together with its model and SAE checkpoint. “Screen-positive” does not mean formal confirmation after multiple-comparison correction.",
+    featuredHeading: "Highlighted case studies",
+    featuredIntro: "Examples selected for clarity of the effect; aggregate statistics use every available carrier prompt.",
+    atlasHeading: "Remaining features",
+    atlasIntro: "The complete screening material, independently of test outcome.",
+    groups: { muspy: "MusPy", instrument: "GM instrument", semantic: "qualitative hypothesis" },
+    status: { replicated: "causally replicated", confirmed: "confirmed", screen_positive: "screen-positive", reviewed: "qualitatively reviewed", awaiting_review: "awaiting review", not_confirmed: "not formally confirmed" },
+    expand: "Expand",
+    collapse: "Collapse",
+    featuredBadge: "highlighted example",
+    layer: "layer",
+    feature: "feature",
+    prompt: "Prompt",
+    strength: "Strength",
+    baseline: "No intervention",
+    semantic: "SAE feature direction",
+    random: "Matched random direction",
+    downloadMp3: "Download MP3",
+    downloadMidi: "Download MIDI",
+    selectedMeasurement: "Measurement for the selected example",
+    measure: "measure",
+    baseShort: "baseline",
+    saeShort: "SAE",
+    randomShort: "random",
+    dose: "dose",
+    deltaBase: "Δ baseline",
+    deltaRandom: "Δ random",
+    presence: "presence: baseline / SAE / random",
+    noteShare: "note share: baseline / SAE / random",
+    durationShare: "duration share: baseline / SAE / random",
+    qualitativeHypothesis: "Qualitative hypothesis",
+    muspyMetric: "MusPy metric",
+    instrumentHypothesis: "Instrument hypothesis",
+    causalReplication: "Causal replication",
+    possibleConfound: "Possible confound",
+    observationalValidation: "observational validation",
+    safeAudit: "audit without warnings",
+    yes: "yes",
+    no: "no",
+    expectedIncrease: "expected increase",
+    expectedDecrease: "expected decrease",
+    atP90: "At p90",
+    expectedChange: "hypothesis-aligned change",
+    versusBase: "versus baseline",
+    versusRandom: "versus control",
+    standardized: "standardized effect",
+    blindedReview: "blinded causal review",
+    saeRecognized: "SAE direction identified",
+    randomRecognized: "random control selected",
+    tie: "tie",
+    neither: "neither variant",
+    unavailable: "rating unavailable",
+    confidence: "confidence",
+    carrierSigns: "carriers SAE/tie/random",
+    activeHeldout: "active held-out examples",
+    distractors: "distractors",
+    confirmed: "confirmed",
+    ratingSummary: "My listening assessment (stored only in this browser)",
+    ratingPlaceholder: "— select a rating —",
+    ratingOptions: [["aligned", "change aligned with the hypothesis"], ["partial", "partly aligned"], ["ambiguous", "ambiguous"], ["misaligned", "not aligned"], ["degenerate", "mostly degeneration"]],
+    notePlaceholder: "Note…",
+    featureCount: "features",
   },
-  {
-    id: "pitch-classes",
-    tabLabel: "Pitch classes",
-    tabMeta: "MusPy · feature 5166",
-    kind: "MusPy feature",
-    status: "Exploratory",
-    title: "Pitch-class diversity",
-    identity: "text2midi · decoder layer 8 · SAE feature 5166",
-    hypothesis:
-      "Amplifying this feature should increase the number and entropy of pitch classes used in the generated passage.",
-    prompt: "A classical-style piano composition with balanced dynamics",
-    path: "samples/pitch-classes",
-    aggregateLabel: "All 10 carrier prompts",
-    metrics: [
-      ["Pitch classes used", "9", "12", "11"],
-      ["Pitch-class entropy", "2.717", "3.464", "3.085"],
-    ],
-    aggregate:
-      "Across all ten prompts at p90, the mean number of pitch classes was 10.0 with the feature intervention, 9.9 at baseline and 8.9 for the random control. Mean pitch-class entropy was 2.766, 2.748 and 2.651 respectively.",
-    caveat:
-      "The selected carrier shows the intended change against both controls, but the aggregate effects are modest and do not survive correction (adjusted q = 0.750 and 0.881).",
-  },
-  {
-    id: "triple-grid",
-    tabLabel: "Triplet drum grid",
-    tabMeta: "MusPy · feature 6981",
-    kind: "MusPy feature",
-    status: "Exploratory",
-    title: "Lower triplet-grid consistency",
-    identity: "MIDI-LLM · layer 2 · SAE feature 6981",
-    hypothesis:
-      "Amplifying this feature should reduce the fraction of drum events aligned with a triplet subdivision grid.",
-    prompt: "A jazz trio piece with piano, bass, and drums",
-    path: "samples/triple-grid",
-    aggregateLabel: "2 prompts with defined drum metrics",
-    metrics: [["Triplet-grid drum rate", "9.5%", "2.9%", "13.3%"]],
-    aggregate:
-      "Among the two prompt triplets containing sufficient drum events, the mean triplet-grid rate fell from 5.8% at baseline to 3.1% under the feature intervention, compared with 7.2% for the random control.",
-    caveat:
-      "This is a directionally clear but very small exploratory subset: the test is not significant after correction (adjusted q = 0.948).",
-  },
-  {
-    id: "nylon-guitar",
-    tabLabel: "Nylon guitar",
-    tabMeta: "instrument · feature 6424",
-    kind: "Instrument feature",
-    status: "Exploratory",
-    title: "Acoustic Guitar (nylon)",
-    identity: "MIDI-LLM · layer 7 · SAE feature 6424",
-    hypothesis:
-      "Amplifying this feature should introduce GM program 24, Acoustic Guitar (nylon), into the generated arrangement.",
-    prompt: "A simple piano piece with a clear melody",
-    path: "samples/nylon-guitar",
-    aggregateLabel: "All 10 carrier prompts",
-    metrics: [
-      ["Target-program note share", "0.0%", "10.5%", "0.0%"],
-      ["Target-program duration share", "0.0%", "10.8%", "0.0%"],
-    ],
-    aggregate:
-      "Across ten prompts at p90, the target guitar appeared in 2/10 feature generations and 0/10 in either control. Its mean share was 9.3% of notes and 8.7% of note duration, versus zero in both controls.",
-    caveat:
-      "The effect is concentrated in two carriers and was not confirmed in the instrument screen (raw p = 0.250; adjusted q = 1.000).",
-  },
-  {
-    id: "continuous-drums",
-    tabLabel: "Continuous drums",
-    tabMeta: "qualitative · feature 552",
-    kind: "Qualitative feature",
-    status: "Blinded-review candidate",
-    title: "Dense, near-continuous percussion",
-    identity: "text2midi · decoder layer 2 · SAE feature 552",
-    hypothesis:
-      "Amplifying this feature should produce a dense and nearly continuous drum or percussion texture.",
-    prompt: "A chamber music piece with violin and cello",
-    path: "samples/continuous-drums",
-    aggregateLabel: "5 blinded review prompts",
-    metrics: [
-      ["Description match (1–5)", "—", "5", "1"],
-      ["Visible degeneration (1–5)", "—", "2", "1"],
-    ],
-    aggregate:
-      "In the blinded piano-roll review, the SAE direction scored 3.6/5 for description match versus 1.6/5 for the random direction and was rated higher on four of five prompts.",
-    caveat:
-      "This is a top per-feature result from an exploratory 48-feature panel whose aggregate result was null. The earlier semantic-safety audit flagged possible token or syntax concentration.",
-  },
-  {
-    id: "multi-timbral",
-    tabLabel: "Many instruments",
-    tabMeta: "qualitative · feature 4021",
-    kind: "Qualitative feature",
-    status: "Blinded-review candidate",
-    title: "Rich, multi-timbral instrumentation",
-    identity: "text2midi · decoder layer 2 · SAE feature 4021",
-    hypothesis:
-      "Amplifying this feature should increase the variety of melodic instruments participating in the arrangement.",
-    prompt: "A chamber music piece with violin and cello",
-    path: "samples/multi-timbral",
-    aggregateLabel: "5 blinded review prompts",
-    metrics: [
-      ["Description match (1–5)", "—", "5", "2"],
-      ["Visible degeneration (1–5)", "—", "1", "2"],
-    ],
-    aggregate:
-      "In the blinded review, the SAE direction scored 4.0/5 for description match versus 2.4/5 for random and was rated higher on four of five prompts.",
-    caveat:
-      "This is an exploratory per-feature result rather than a corrected discovery. The earlier semantic-safety audit flagged possible token or syntax concentration.",
-  },
-  {
-    id: "timpani-texture",
-    tabLabel: "Sparse timpani",
-    tabMeta: "qualitative · feature 4606",
-    kind: "Qualitative feature",
-    status: "Blinded-review candidate",
-    title: "Sparse texture with recurring timpani",
-    identity: "text2midi · decoder layer 16 · SAE feature 4606",
-    hypothesis:
-      "Amplifying this feature should produce a sparse texture containing recurring low, timpani-like percussion.",
-    prompt: "A light orchestral sketch with strings and woodwinds",
-    path: "samples/timpani-texture",
-    aggregateLabel: "5 blinded review prompts",
-    metrics: [
-      ["Description match (1–5)", "—", "5", "2"],
-      ["Visible degeneration (1–5)", "—", "2", "2"],
-    ],
-    aggregate:
-      "In the blinded review, the SAE direction scored 3.4/5 for description match versus 2.0/5 for random. It was rated higher on three prompts and tied on two.",
-    caveat:
-      "This is an exploratory per-feature result from a panel with no aggregate causal effect. The semantic-safety audit flagged a possible token or syntax explanation.",
-  },
-  {
-    id: "drum-layer",
-    tabLabel: "Drum-kit layer",
-    tabMeta: "qualitative · feature 6671",
-    kind: "Qualitative feature",
-    status: "Blinded-review candidate",
-    title: "Prominent, continuous drum-kit layer",
-    identity: "MIDI-LLM · layer 2 · SAE feature 6671",
-    hypothesis:
-      "Amplifying this feature should add a prominent and continuous drum-kit layer relative to the melodic material.",
-    prompt: "A solo guitar piece with a smooth melodic line",
-    path: "samples/drum-layer",
-    aggregateLabel: "5 blinded review prompts",
-    metrics: [
-      ["Description match (1–5)", "—", "5", "1"],
-      ["Visible degeneration (1–5)", "—", "2", "1"],
-    ],
-    aggregate:
-      "In the blinded review, the SAE direction scored 3.6/5 for description match versus 2.4/5 for random. It was rated higher on three prompts, tied on one and lower on one.",
-    caveat:
-      "This is exploratory and the semantic-safety audit flagged token concentration plus a note-count imbalance. The full qualitative panel did not show an aggregate effect.",
-  },
-];
-
-const conditions = [
-  { id: "baseline", eyebrow: "Reference", title: "Baseline", className: "baseline-sample" },
-  { id: "feature", eyebrow: "Target intervention", title: "SAE feature", className: "feature-sample" },
-  { id: "random", eyebrow: "Matched control", title: "Random direction", className: "random-sample" },
-];
-
-const tabs = document.querySelector("#featureTabs");
-const title = document.querySelector("#featureTitle");
-const kind = document.querySelector("#featureKind");
-const status = document.querySelector("#featureStatus");
-const identity = document.querySelector("#featureId");
-const hypothesis = document.querySelector("#featureHypothesis");
-const prompt = document.querySelector("#featurePrompt");
-const comparison = document.querySelector("#comparisonGrid");
-const metrics = document.querySelector("#sampleMetrics");
-const aggregateLabel = document.querySelector("#aggregateLabel");
-const aggregate = document.querySelector("#aggregateEvidence");
-const caveat = document.querySelector("#featureCaveat");
-
-let activeFeature = features[0];
-
-function renderTabs() {
-  tabs.innerHTML = "";
-  features.forEach((feature) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "feature-tab";
-    button.dataset.feature = feature.id;
-    button.innerHTML = `<strong>${feature.tabLabel}</strong><span>${feature.tabMeta}</span>`;
-    button.addEventListener("click", () => {
-      activeFeature = feature;
-      renderFeature();
-    });
-    tabs.append(button);
-  });
-}
-
-function renderSamples(feature) {
-  comparison.innerHTML = conditions
-    .map(
-      (condition) => `
-        <article class="sample-card ${condition.className}">
-          <header>
-            <span>${condition.eyebrow}</span>
-            <h3>${condition.title}</h3>
-          </header>
-          <a
-            class="roll-link"
-            href="${feature.path}/${condition.id}.webp"
-            target="_blank"
-            title="Open the piano roll at full resolution"
-          >
-            <img
-              class="piano-roll"
-              src="${feature.path}/${condition.id}.webp"
-              alt="Instrument-coloured piano roll for the ${condition.title.toLowerCase()} condition"
-            >
-          </a>
-          <div class="sample-controls">
-            <audio controls preload="metadata" src="${feature.path}/${condition.id}.mp3"></audio>
-            <div class="downloads">
-              <a href="${feature.path}/${condition.id}.mp3" download>MP3</a>
-              <a href="${feature.path}/${condition.id}.mid" download>MIDI</a>
-            </div>
-          </div>
-        </article>`,
-    )
-    .join("");
-}
-
-function renderFeature() {
-  tabs.querySelectorAll(".feature-tab").forEach((button) => {
-    const selected = button.dataset.feature === activeFeature.id;
-    button.classList.toggle("is-active", selected);
-    button.setAttribute("aria-pressed", String(selected));
-  });
-
-  title.textContent = activeFeature.title;
-  kind.textContent = activeFeature.kind;
-  status.textContent = activeFeature.status;
-  identity.textContent = activeFeature.identity;
-  hypothesis.textContent = activeFeature.hypothesis;
-  prompt.textContent = `“${activeFeature.prompt}”`;
-  aggregateLabel.textContent = activeFeature.aggregateLabel;
-  aggregate.textContent = activeFeature.aggregate;
-  caveat.textContent = activeFeature.caveat;
-  metrics.innerHTML = activeFeature.metrics
-    .map(
-      ([label, baseline, feature, random]) => `
-        <tr>
-          <td>${label}</td>
-          <td>${baseline}</td>
-          <td>${feature}</td>
-          <td>${random}</td>
-        </tr>`,
-    )
-    .join("");
-  renderSamples(activeFeature);
-}
-
-renderTabs();
-renderFeature();
-
-const libraryCards = window.SAE_LIBRARY?.cards ?? [];
-const librarySearch = document.querySelector("#librarySearch");
-const libraryGroup = document.querySelector("#libraryGroup");
-const libraryModel = document.querySelector("#libraryModel");
-const libraryCount = document.querySelector("#libraryCount");
-const libraryList = document.querySelector("#libraryList");
-const libraryBadges = document.querySelector("#libraryBadges");
-const libraryTitle = document.querySelector("#libraryFeatureTitle");
-const libraryId = document.querySelector("#libraryFeatureId");
-const libraryPrompt = document.querySelector("#libraryPrompt");
-const libraryDoses = document.querySelector("#libraryDoses");
-const libraryPromptText = document.querySelector("#libraryPromptText");
-const libraryComparison = document.querySelector("#libraryComparison");
-const libraryEvidence = document.querySelector("#libraryEvidence");
-
-const statusLabels = {
-  replicated: "Replicated",
-  screen_positive: "Screen-positive",
-  reviewed: "Qualitative review",
-  not_confirmed: "Not confirmed",
 };
 
-let selectedLibraryCard = libraryCards.find((card) => card.feature_id === 995) ?? libraryCards[0];
-let selectedLibraryDose = "p90";
-let selectedLibraryPrompt = selectedLibraryCard?.best_prompt ?? 0;
+const METRICS = {
+  drum_in_pattern_rate: { pl: "zgodność perkusji z siatką dwójkową", en: "duple-grid drum rate" },
+  drum_in_pattern_rate_triple: { pl: "zgodność perkusji z siatką triolową", en: "triplet-grid drum rate" },
+  drum_pattern_consistency: { pl: "zgodność perkusji z dominującą siatką", en: "dominant-grid drum consistency" },
+  empty_beat_rate: { pl: "udział pustych jednostek ćwierćnutowych", en: "empty-beat rate" },
+  n_pitch_classes_used: { pl: "liczba różnych klas wysokości", en: "number of pitch classes" },
+  n_pitches_used: { pl: "liczba różnych wysokości", en: "number of pitches" },
+  pitch_class_entropy: { pl: "entropia klas wysokości", en: "pitch-class entropy" },
+  pitch_entropy: { pl: "entropia wysokości dźwięków", en: "pitch entropy" },
+  pitch_range: { pl: "rozpiętość wysokości", en: "pitch range" },
+  polyphony: { pl: "średnia polifonia", en: "mean polyphony" },
+  polyphony_rate: { pl: "udział fragmentu z co najmniej trzema wysokościami", en: "polyphony rate" },
+  scale_consistency: { pl: "zgodność ze skalą durową lub molową", en: "scale consistency" },
+};
 
-function escapeHtml(value) {
-  return String(value ?? "").replace(
-    /[&<>"']/g,
-    (character) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;",
-    })[character],
+const PL_TITLES = {
+  995: "Instrument: Electric Piano 1",
+  1015: "Wzrost entropii wysokości dźwięków",
+  3340: "Lead 2 (sawtooth) i elektroniczna instrumentacja",
+  5166: "Większa różnorodność klas wysokości",
+  6981: "Mniejsza zgodność perkusji z siatką triolową",
+  6424: "Instrument: Acoustic Guitar (nylon)",
+  552: "Gęsta, niemal ciągła warstwa perkusyjna",
+  4021: "Bogata, wielobarwna instrumentacja",
+  4606: "Rzadka faktura z powracającymi kotłami",
+  6671: "Wyraźna, ciągła warstwa zestawu perkusyjnego",
+};
+
+let language = loadLanguage();
+let ratings = loadRatings();
+
+function t(key) {
+  return I18N[language][key];
+}
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[character]);
+}
+
+function fmt(value, digits = 3) {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";
+  const output = Number(value).toFixed(digits);
+  return language === "pl" ? output.replace(".", ",") : output;
+}
+
+function pct(value, digits = 1) {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";
+  return `${fmt(100 * Number(value), digits)}%`;
+}
+
+function loadRatings() {
+  try {
+    return JSON.parse(localStorage.getItem("sae-demo-ratings-v2") || "{}");
+  } catch (_error) {
+    return {};
+  }
+}
+
+function loadLanguage() {
+  try {
+    return localStorage.getItem("sae-demo-language") || (navigator.language.startsWith("pl") ? "pl" : "en");
+  } catch (_error) {
+    return navigator.language.startsWith("pl") ? "pl" : "en";
+  }
+}
+
+function setOptions(element, values) {
+  const selected = element.value;
+  element.innerHTML = values.map(([value, label]) => `<option value="${value}">${label}</option>`).join("");
+  if (values.some(([value]) => value === selected)) element.value = selected;
+}
+
+function applyLanguage() {
+  document.documentElement.lang = language;
+  document.title = t("pageTitle");
+  document.querySelectorAll("[data-text]").forEach((element) => {
+    const value = t(element.dataset.text);
+    if (["footerAudio", "footerIdentity"].includes(element.dataset.text)) element.innerHTML = value;
+    else element.textContent = value;
+  });
+  document.querySelector("#methodGrid").innerHTML = t("method")
+    .map(([title, body]) => `<div><b>${title}</b>${body}</div>`).join("");
+  document.querySelector("#search").placeholder = t("searchPlaceholder");
+  setOptions(document.querySelector("#category"), t("categories"));
+  setOptions(document.querySelector("#model"), t("models"));
+  setOptions(document.querySelector("#status"), t("statuses"));
+  document.querySelectorAll(".language-button").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.language === language);
+    button.setAttribute("aria-pressed", String(button.dataset.language === language));
+  });
+}
+
+function metricName(evidence) {
+  return METRICS[evidence.original_name]?.[language] || evidence.metric_name || evidence.label;
+}
+
+function displayTitle(card) {
+  if (language === "en") return card.title;
+  if (PL_TITLES[card.feature_id]) return PL_TITLES[card.feature_id];
+  const semantic = card.evidence.find((item) => item.type === "semantic");
+  if (semantic) return semantic.label;
+  const instrument = card.evidence.find((item) => ["instrument", "replication"].includes(item.type));
+  if (instrument) return `Instrument: ${instrument.label.replace(/^GM(?: program)? \d+: /, "")}`;
+  return card.evidence.filter((item) => item.type === "muspy")
+    .map((item) => `${Number(item.expected_sign) > 0 ? "wzrost" : "spadek"}: ${metricName(item)}`).join("; ");
+}
+
+function scopeName(evidence) {
+  if (language === "pl") return evidence.scope_pl || evidence.scope?.replaceAll("_", " ") || "";
+  return evidence.scope?.replaceAll("_", " ") || "";
+}
+
+function doseTable(evidence) {
+  const rows = evidence.dose_summaries || [];
+  if (!rows.length) return "";
+  if (evidence.type === "muspy") {
+    return `<div class="dose-wrap"><table class="dose-table"><thead><tr><th>${t("dose")}</th><th>${t("baseShort")}</th><th>${t("saeShort")}</th><th>${t("randomShort")}</th><th>${t("deltaBase")}</th><th>${t("deltaRandom")}</th></tr></thead><tbody>${rows.map((row) => `<tr><td>p${row.dose_percentile}</td><td>${fmt(row.baseline_mean)}</td><td>${fmt(row.semantic_mean)}</td><td>${fmt(row.random_mean)}</td><td>${fmt(row.semantic_minus_baseline)}</td><td>${fmt(row.semantic_minus_random)}</td></tr>`).join("")}</tbody></table></div>`;
+  }
+  return `<div class="dose-wrap"><table class="dose-table"><thead><tr><th>${t("dose")}</th><th>${t("presence")}</th><th>${t("noteShare")}</th><th>${t("durationShare")}</th></tr></thead><tbody>${rows.map((row) => `<tr><td>p${row.dose_percentile}</td><td>${pct(row.baseline_presence_rate, 0)} / ${pct(row.semantic_presence_rate, 0)} / ${pct(row.random_presence_rate, 0)}</td><td>${pct(row.baseline_note_share_mean)} / ${pct(row.semantic_note_share_mean)} / ${pct(row.random_note_share_mean)}</td><td>${pct(row.baseline_duration_share_mean)} / ${pct(row.semantic_duration_share_mean)} / ${pct(row.random_duration_share_mean)}</td></tr>`).join("")}</tbody></table></div>`;
+}
+
+function evidenceHtml(evidence) {
+  if (evidence.type === "semantic") {
+    const review = evidence.causal_review;
+    let verdict = t("unavailable");
+    if (review) {
+      verdict = review.forced_side_choice
+        ? (review.identified_semantic ? t("saeRecognized") : t("randomRecognized"))
+        : (review.choice === "tie" ? t("tie") : t("neither"));
+    }
+    const causal = review
+      ? `<div class="numbers">${t("blindedReview")}: ${verdict}, ${t("confidence")} ${review.confidence}/5 · SAE ${fmt(review.semantic_match_mean)} vs ${t("randomShort")} ${fmt(review.random_match_mean)} · Δ=${fmt(review.paired_match_difference)} · ${t("carrierSigns")}: ${review.n_carrier_semantic_higher}/${review.n_carrier_equal}/${review.n_carrier_random_higher}</div>`
+      : `<div class="numbers">${t("blindedReview")}: ${verdict}</div>`;
+    return `<div class="hypothesis semantic"><b>${t("qualitativeHypothesis")} · ${esc(scopeName(evidence))}</b><div class="description">${esc(evidence.label)}</div><div class="description">${esc(evidence.description)}</div>${evidence.possible_confound ? `<div class="confound">${t("possibleConfound")}: ${esc(evidence.possible_confound)}</div>` : ""}<div class="numbers">${t("observationalValidation")}: ${evidence.heldout_hits}/4 · ${t("safeAudit")}: ${evidence.semantic_safe ? t("yes") : t("no")}</div>${causal}</div>`;
+  }
+  if (evidence.type === "muspy") {
+    const prediction = Number(evidence.expected_sign) > 0 ? t("expectedIncrease") : t("expectedDecrease");
+    return `<div class="hypothesis muspy"><b>${t("muspyMetric")} · ${esc(metricName(evidence))}</b><div>${prediction}. ${t("atP90")}: ${t("baseShort")} ${fmt(evidence.baseline_mean)}, SAE ${fmt(evidence.semantic_mean)}, ${t("randomShort")} ${fmt(evidence.random_mean)}.</div><div class="numbers">${t("expectedChange")}: ${t("versusBase")} ${fmt(evidence.effect_vs_baseline)}, ${t("versusRandom")} ${fmt(evidence.effect_vs_random)} · ${t("standardized")} ${fmt(evidence.standardized_effect)} · p=${fmt(evidence.p, 4)} · q=${fmt(evidence.q, 4)} · r val.=${fmt(evidence.observational)} · r test=${fmt(evidence.heldout)}</div>${doseTable(evidence)}</div>`;
+  }
+  const heading = evidence.type === "replication" ? t("causalReplication") : t("instrumentHypothesis");
+  const observational = evidence.type === "instrument"
+    ? `<div class="numbers">${t("activeHeldout")}: ${pct(evidence.observational, 0)} · ${t("distractors")}: ${pct(evidence.heldout, 0)}</div>` : "";
+  return `<div class="hypothesis ${evidence.type}"><b>${heading} · ${esc(evidence.label)}</b><div>${t("atP90")} — ${t("presence")}: ${pct(evidence.baseline_presence, 0)} / ${pct(evidence.semantic_presence, 0)} / ${pct(evidence.random_presence, 0)}; ${t("noteShare")}: ${pct(evidence.baseline_note_share)} / ${pct(evidence.semantic_note_share)} / ${pct(evidence.random_note_share)}; ${t("durationShare")}: ${pct(evidence.baseline_duration_share)} / ${pct(evidence.semantic_duration_share)} / ${pct(evidence.random_duration_share)}.</div><div class="numbers">Δ ${language === "pl" ? "udziału nut" : "note share"}: SAE−${t("baseShort")} ${pct(evidence.note_share_effect_vs_baseline)}, SAE−${t("randomShort")} ${pct(evidence.note_share_effect_vs_random)} · Δ ${language === "pl" ? "udziału czasu" : "duration share"}: SAE−${t("baseShort")} ${pct(evidence.duration_share_effect_vs_baseline)}, SAE−${t("randomShort")} ${pct(evidence.duration_share_effect_vs_random)} · p=${fmt(evidence.p, 4)}${evidence.q !== undefined ? ` · q=${fmt(evidence.q, 4)}` : ""}${evidence.confirmed ? ` · ${t("confirmed")}` : ""}</div>${observational}${doseTable(evidence)}</div>`;
+}
+
+function mediaFor(card, promptIndex, dose) {
+  const carrier = card.carriers.find((item) => item.prompt_idx === Number(promptIndex));
+  if (!carrier) return null;
+  return {
+    prompt: carrier.prompt,
+    baseline: carrier.baseline,
+    semantic: carrier.doses[dose].feature,
+    random: carrier.doses[dose].random,
+  };
+}
+
+function carrierOutcomeHtml(card, promptIndex, dose) {
+  const rows = [];
+  for (const evidence of card.evidence) {
+    const values = evidence.carrier_values?.[dose]?.[String(promptIndex)];
+    if (!values) continue;
+    if (evidence.type === "muspy") {
+      rows.push(`<tr><td>${esc(metricName(evidence))}</td><td>${fmt(values.baseline)}</td><td>${fmt(values.semantic)}</td><td>${fmt(values.random)}</td></tr>`);
+    } else {
+      rows.push(`<tr><td>${esc(evidence.label)} — ${language === "pl" ? "udział nut" : "note share"}</td><td>${pct(values.baseline.note_share)}</td><td>${pct(values.semantic.note_share)}</td><td>${pct(values.random.note_share)}</td></tr>`);
+      rows.push(`<tr><td>${esc(evidence.label)} — ${language === "pl" ? "udział czasu" : "duration share"}</td><td>${pct(values.baseline.duration_share)}</td><td>${pct(values.semantic.duration_share)}</td><td>${pct(values.random.duration_share)}</td></tr>`);
+    }
+  }
+  if (!rows.length) return "";
+  return `<b>${t("selectedMeasurement")}</b><table class="outcome-table"><thead><tr><th>${t("measure")}</th><th>${t("baseShort")}</th><th>${t("saeShort")}</th><th>${t("randomShort")}</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
+}
+
+function sampleHtml(kind, title) {
+  return `<div class="sample ${kind}-sample" data-kind="${kind}"><h3>${title}</h3><audio controls preload="none"></audio><a class="roll-link" target="_blank"><img class="roll" loading="lazy" alt="Piano roll"></a><div class="downloads"><a class="mp3" download>${t("downloadMp3")}</a><a class="midi" download>${t("downloadMidi")}</a></div></div>`;
+}
+
+function cardHtml(card) {
+  const limited = card.carriers.length === 1;
+  const badges = card.groups.map((group) => `<span class="badge ${group}">${t("groups")[group]}</span>`).join("");
+  const scope = card.evidence.find((item) => item.type === "semantic");
+  return `<details class="card ${card.top_feature ? "featured" : ""}" data-id="${esc(card.candidate_id)}" ${card.feature_id === 995 ? "open" : ""}><summary class="card-head"><span class="head-main"><span class="identity">${esc(card.model)} · ${t("layer")} ${card.layer} · ${t("feature")} ${card.feature_id}${limited ? '<span class="limited-mark"> *</span>' : ""}</span><span class="card-title">${esc(displayTitle(card))}</span><span class="badges">${card.top_feature ? `<span class="badge featured">${t("featuredBadge")}</span>` : ""}${badges}${scope ? `<span class="badge">${esc(scopeName(scope))}</span>` : ""}</span></span><span class="head-side"><span class="status ${card.status}">${t("status")[card.status]}</span><span class="expand-label" aria-hidden="true">${t("expand")}</span></span></summary><div class="card-body"></div></details>`;
+}
+
+function ratingOptions() {
+  return `<option value="">${t("ratingPlaceholder")}</option>${t("ratingOptions").map(([value, label]) => `<option value="${value}">${label}</option>`).join("")}`;
+}
+
+function cardBodyHtml(card) {
+  const promptOptions = card.carriers.map((carrier) => {
+    const label = card.carriers.length === 1
+      ? `${t("prompt")} ${carrier.prompt_idx + 1}*`
+      : `${carrier.prompt_idx + 1}/10`;
+    return `<option value="${carrier.prompt_idx}" ${carrier.prompt_idx === card.best_prompt ? "selected" : ""}>${label}</option>`;
+  }).join("");
+  return `<div class="hypotheses">${card.evidence.map(evidenceHtml).join("")}</div><div class="listen"><div class="listen-controls"><label>${t("prompt")} <select class="prompt">${promptOptions}</select></label><label>${t("strength")} <select class="dose"><option value="p50">p50</option><option value="p75">p75</option><option value="p90" selected>p90</option></select></label><span class="prompt-text"></span></div><div class="carrier-outcomes"></div><div class="compare">${sampleHtml("baseline", t("baseline"))}${sampleHtml("semantic", t("semantic"))}${sampleHtml("random", t("random"))}</div></div><details class="rating"><summary>${t("ratingSummary")}</summary><div class="rating-row"><select class="verdict">${ratingOptions()}</select><textarea class="note" placeholder="${t("notePlaceholder")}"></textarea></div></details>`;
+}
+
+function updateMedia(element, card) {
+  const promptIndex = element.querySelector(".prompt")?.value;
+  const dose = element.querySelector(".dose")?.value;
+  if (promptIndex === undefined) return;
+  const media = mediaFor(card, promptIndex, dose);
+  element.querySelector(".prompt-text").textContent = media?.prompt || "";
+  element.querySelector(".carrier-outcomes").innerHTML = carrierOutcomeHtml(card, promptIndex, dose);
+  for (const kind of ["baseline", "semantic", "random"]) {
+    const box = element.querySelector(`[data-kind="${kind}"]`);
+    const item = media?.[kind];
+    if (!item) {
+      box.hidden = true;
+      continue;
+    }
+    const audio = box.querySelector("audio");
+    if (audio.dataset.src !== item.audio) {
+      audio.src = item.audio;
+      audio.dataset.src = item.audio;
+      audio.load();
+    }
+    const image = box.querySelector("img");
+    image.src = item.piano_roll;
+    box.querySelector(".roll-link").href = item.piano_roll;
+    box.querySelector(".mp3").href = item.audio;
+    box.querySelector(".midi").href = item.midi;
+    box.hidden = false;
+  }
+}
+
+function restoreRating(element, card) {
+  const value = ratings[card.candidate_id] || {};
+  element.querySelector(".verdict").value = value.verdict || "";
+  element.querySelector(".note").value = value.note || "";
+  const save = () => {
+    ratings[card.candidate_id] = {
+      verdict: element.querySelector(".verdict").value,
+      note: element.querySelector(".note").value,
+      updated_at: new Date().toISOString(),
+    };
+    try {
+      localStorage.setItem("sae-demo-ratings-v2", JSON.stringify(ratings));
+    } catch (_error) {
+      // Ratings remain available in memory for the current session.
+    }
+  };
+  element.querySelector(".verdict").onchange = save;
+  element.querySelector(".note").oninput = save;
+}
+
+function hydrateCard(element, card) {
+  if (element.dataset.hydrated === "true") return;
+  element.querySelector(".card-body").innerHTML = cardBodyHtml(card);
+  element.dataset.hydrated = "true";
+  element.querySelector(".prompt").addEventListener("change", () => updateMedia(element, card));
+  element.querySelector(".dose").addEventListener("change", () => updateMedia(element, card));
+  updateMedia(element, card);
+  restoreRating(element, card);
+}
+
+function filteredCards() {
+  const query = document.querySelector("#search").value.toLowerCase();
+  const category = document.querySelector("#category").value;
+  const model = document.querySelector("#model").value;
+  const status = document.querySelector("#status").value;
+  return DATA.filter((card) =>
+    (category === "all" || card.groups.includes(category)) &&
+    (model === "all" || card.model === model) &&
+    (status === "all" || card.status === status) &&
+    (!query || displayTitle(card).toLowerCase().includes(query) || card.candidate_id.toLowerCase().includes(query) || JSON.stringify(card.evidence).toLowerCase().includes(query))
   );
 }
 
-function number(value, digits = 3) {
-  if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";
-  return Number(value).toFixed(digits);
-}
-
-function percent(value, digits = 1) {
-  if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";
-  return `${(100 * Number(value)).toFixed(digits)}%`;
-}
-
-function evidenceHtml(item) {
-  if (item.type === "semantic") {
-    const review = item.causal_review;
-    const reviewText = review
-      ? `Blinded causal review: feature ${number(review.semantic_match_mean, 1)}/5 vs random ${number(review.random_match_mean, 1)}/5; difference ${number(review.paired_match_difference, 1)}.`
-      : "No blinded causal rating available.";
-    return `<div class="evidence-block"><strong>Qualitative hypothesis · ${escapeHtml(item.label)}</strong><p>${escapeHtml(item.description)}</p><p>${escapeHtml(reviewText)}</p></div>`;
+function render() {
+  document.querySelectorAll("audio").forEach((audio) => audio.pause());
+  const rows = filteredCards();
+  const featured = rows.filter((card) => card.top_feature);
+  const remaining = rows.filter((card) => !card.top_feature);
+  let html = "";
+  if (featured.length) {
+    html += `<section class="section-intro"><h2>${t("featuredHeading")}</h2><p>${t("featuredIntro")}</p></section>${featured.map(cardHtml).join("")}`;
   }
-  if (item.type === "muspy") {
-    const direction = Number(item.expected_sign) > 0 ? "increase" : "decrease";
-    return `<div class="evidence-block"><strong>MusPy hypothesis · expected ${direction} in ${escapeHtml(item.metric_name)}</strong><p>At p90 across the available carriers: baseline ${number(item.baseline_mean)}, feature ${number(item.semantic_mean)}, random ${number(item.random_mean)}; adjusted q = ${number(item.q, 3)}.</p></div>`;
+  if (remaining.length) {
+    html += `<section class="section-intro full-atlas"><h2>${t("atlasHeading")}</h2><p>${t("atlasIntro")}</p></section>${remaining.map(cardHtml).join("")}`;
   }
-  const confirmed = item.type === "replication" ? " Independently replicated." : "";
-  return `<div class="evidence-block"><strong>${item.type === "replication" ? "Replicated instrument feature" : "Instrument hypothesis"} · ${escapeHtml(item.label)}</strong><p>At p90: target-note share baseline / feature / random = ${percent(item.baseline_note_share)} / ${percent(item.semantic_note_share)} / ${percent(item.random_note_share)}; duration share = ${percent(item.baseline_duration_share)} / ${percent(item.semantic_duration_share)} / ${percent(item.random_duration_share)}.${confirmed}</p></div>`;
-}
-
-function librarySample(kind, label, media) {
-  return `
-    <article class="sample-card ${kind}-sample">
-      <header><span>${kind === "feature" ? "Target intervention" : kind === "random" ? "Matched control" : "Reference"}</span><h3>${label}</h3></header>
-      <a class="roll-link" href="${media.piano_roll}" target="_blank" title="Open the piano roll at full resolution">
-        <img class="piano-roll" src="${media.piano_roll}" alt="Instrument-coloured piano roll for ${label.toLowerCase()}">
-      </a>
-      <div class="sample-controls">
-        <audio controls preload="metadata" src="${media.audio}"></audio>
-        <div class="downloads"><a href="${media.audio}" download>MP3</a><a href="${media.midi}" download>MIDI</a></div>
-      </div>
-    </article>`;
-}
-
-function filteredLibraryCards() {
-  const query = librarySearch.value.trim().toLowerCase();
-  return libraryCards.filter((card) => {
-    const text = `${card.title} ${card.model} ${card.layer} ${card.feature_id}`.toLowerCase();
-    const groupMatches = libraryGroup.value === "all" || card.groups.includes(libraryGroup.value);
-    const modelMatches = libraryModel.value === "all" || card.model === libraryModel.value;
-    return text.includes(query) && groupMatches && modelMatches;
-  });
-}
-
-function renderLibraryList() {
-  const visible = filteredLibraryCards();
-  libraryCount.textContent = `${visible.length} / ${libraryCards.length} features`;
-  if (!visible.length) {
-    libraryList.innerHTML = '<p class="empty-library">No matching features.</p>';
-    return;
-  }
-  libraryList.innerHTML = visible
-    .map(
-      (card) => `
-        <button class="library-item ${card.candidate_id === selectedLibraryCard?.candidate_id ? "is-active" : ""}" data-candidate="${escapeHtml(card.candidate_id)}" type="button">
-          <strong>${escapeHtml(card.title)}</strong>
-          <span>${card.model === "midi_llm" ? "MIDI-LLM" : "text2midi"} · L${card.layer} · f${card.feature_id}</span>
-          ${card.top_feature ? '<span class="top-marker">10 prompts</span>' : ""}
-        </button>`,
-    )
-    .join("");
-  libraryList.querySelectorAll(".library-item").forEach((button) => {
-    button.addEventListener("click", () => {
-      selectedLibraryCard = libraryCards.find((card) => card.candidate_id === button.dataset.candidate);
-      selectedLibraryPrompt = selectedLibraryCard.best_prompt;
-      renderLibraryList();
-      renderLibraryViewer();
+  const root = document.querySelector("#cards");
+  root.innerHTML = html;
+  document.querySelector("#result-count").textContent = `${rows.length} / ${DATA.length} ${t("featureCount")}`;
+  const byId = Object.fromEntries(rows.map((card) => [card.candidate_id, card]));
+  root.querySelectorAll(".card").forEach((element) => {
+    const card = byId[element.dataset.id];
+    const updateExpandLabel = () => {
+      element.querySelector(".expand-label").textContent = element.open ? t("collapse") : t("expand");
+    };
+    element.addEventListener("toggle", () => {
+      updateExpandLabel();
+      if (element.open) hydrateCard(element, card);
+      else element.querySelectorAll("audio").forEach((audio) => audio.pause());
     });
+    updateExpandLabel();
+    if (element.open) hydrateCard(element, card);
   });
 }
 
-function renderLibraryViewer() {
-  if (!selectedLibraryCard) return;
-  const card = selectedLibraryCard;
-  libraryBadges.innerHTML = `
-    ${card.groups.map((group) => `<span class="badge">${escapeHtml(group)}</span>`).join("")}
-    <span class="badge status">${escapeHtml(statusLabels[card.status] ?? card.status)}</span>
-    ${card.top_feature ? '<span class="badge">all 10 prompts</span>' : '<span class="badge">best prompt</span>'}`;
-  libraryTitle.textContent = card.title;
-  libraryId.textContent = `${card.model === "midi_llm" ? "MIDI-LLM" : "text2midi"} · layer ${card.layer} · SAE feature ${card.feature_id}`;
-
-  libraryPrompt.innerHTML = card.carriers
-    .map((carrier) => `<option value="${carrier.prompt_idx}">Prompt ${carrier.prompt_idx + 1}${carrier.prompt_idx === card.best_prompt ? " · strongest" : ""}</option>`)
-    .join("");
-  if (!card.carriers.some((carrier) => carrier.prompt_idx === selectedLibraryPrompt)) {
-    selectedLibraryPrompt = card.carriers[0].prompt_idx;
+function changeLanguage(nextLanguage) {
+  language = nextLanguage;
+  try {
+    localStorage.setItem("sae-demo-language", language);
+  } catch (_error) {
+    // The switch still works when storage is unavailable.
   }
-  libraryPrompt.value = String(selectedLibraryPrompt);
-  libraryPrompt.disabled = card.carriers.length === 1;
-
-  libraryDoses.innerHTML = ["p50", "p75", "p90"]
-    .map((dose) => `<button type="button" class="dose-button ${dose === selectedLibraryDose ? "is-active" : ""}" data-dose="${dose}">${dose}</button>`)
-    .join("");
-  libraryDoses.querySelectorAll(".dose-button").forEach((button) => {
-    button.addEventListener("click", () => {
-      selectedLibraryDose = button.dataset.dose;
-      renderLibraryViewer();
-    });
-  });
-
-  const carrier = card.carriers.find((item) => item.prompt_idx === selectedLibraryPrompt);
-  const dose = carrier.doses[selectedLibraryDose];
-  libraryPromptText.textContent = `“${carrier.prompt}”`;
-  libraryComparison.innerHTML =
-    librarySample("baseline", "Baseline", carrier.baseline) +
-    librarySample("feature", "SAE feature", dose.feature) +
-    librarySample("random", "Random direction", dose.random);
-  libraryEvidence.innerHTML = card.evidence.map(evidenceHtml).join("");
+  applyLanguage();
+  render();
 }
 
-libraryPrompt.addEventListener("change", () => {
-  selectedLibraryPrompt = Number(libraryPrompt.value);
-  renderLibraryViewer();
+document.querySelectorAll(".language-button").forEach((button) => {
+  button.addEventListener("click", () => changeLanguage(button.dataset.language));
 });
-[librarySearch, libraryGroup, libraryModel].forEach((control) => {
-  control.addEventListener(control === librarySearch ? "input" : "change", renderLibraryList);
+document.querySelectorAll(".filters input, .filters select").forEach((control) => {
+  control.addEventListener("input", render);
+});
+document.addEventListener("play", (event) => {
+  if (event.target.tagName === "AUDIO") {
+    document.querySelectorAll("audio").forEach((audio) => {
+      if (audio !== event.target) audio.pause();
+    });
+  }
+}, true);
+document.querySelector("#export").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify({ schema_version: 1, exported_at: new Date().toISOString(), ratings }, null, 2)], { type: "application/json" });
+  const anchor = document.createElement("a");
+  anchor.href = URL.createObjectURL(blob);
+  anchor.download = "sae-demo-listening-ratings.json";
+  anchor.click();
+  URL.revokeObjectURL(anchor.href);
 });
 
-renderLibraryList();
-renderLibraryViewer();
+applyLanguage();
+render();
