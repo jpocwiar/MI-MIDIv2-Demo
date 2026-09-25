@@ -2,54 +2,57 @@ const DATA = window.SAE_LIBRARY.cards;
 
 const I18N = {
   pl: {
-    pageTitle: "Atlas cech SAE — muzyka symboliczna",
-    heroEyebrow: "Mechanistyczna interpretowalność generacji MIDI",
-    heroTitle: "Atlas interwencji w cechy SAE",
+    pageTitle: "MI-MIDI — interwencje w cechy SAE",
+    metaDescription: "Próbki dźwiękowe dla interwencji w cechy rzadkich autoenkoderów modeli text-to-MIDI.",
+    heroEyebrow: "Mechanistyczna interpretowalność modeli text-to-MIDI",
+    heroSection: "Interwencje w cechy rzadkich autoenkoderów",
     heroLead:
-      "Porównaj tę samą generację bez interwencji, po wzmocnieniu kierunku cechy oraz po równie silnej zmianie w losowym kierunku. Wyróżnione karty pokazują najbardziej czytelne studia przypadków, a pełny atlas obejmuje wszystkie badane cechy.",
-    statFeatures: "unikalnych cech",
-    statMuspy: "cech wybranych przez MusPy",
-    statInstruments: "cech instrumentacyjnych",
-    statQualitative: "hipotez jakościowych",
-    statDoses: "poziomy siły interwencji",
-    methodSummary: "Jak czytać porównania?",
+      "Niniejsze demo udostępnia próbki dźwiękowe uzyskane w badaniach opisanych w rozdziale „Rzadkie autoenkodery” pracy magisterskiej. Materiał obejmuje cechy modeli text2midi i MIDI-LLM wraz z generacjami bazowymi i dopasowanymi kontrolami losowymi.",
+    guideTitle: "Interpretacja porównania",
+    guideText: "Każda karta odpowiada jednej cesze SAE wyodrębnionej w określonym modelu i warstwie. Trzy warianty w obrębie karty wykorzystują ten sam prompt i ziarno losowe.",
+    guideItems: [
+      ["baseline", "Generacja bazowa", "bez zmiany aktywacji"],
+      ["semantic", "Interwencja w cechę SAE", "wzmocnienie wybranej cechy"],
+      ["random", "Kontrola losowa", "zmiana o dopasowanej normie"],
+    ],
+    methodSummary: "Szczegóły metodyczne",
     method: [
-      ["Generacja bazowa", "Model generuje bez zmiany aktywacji. Stanowi punkt odniesienia dla tego samego promptu i ziarna."],
-      ["Kierunek cechy SAE", "Na każdym kroku aktywacja jest podnoszona co najmniej do percentyla p50, p75 albo p90 jej naturalnych dodatnich aktywacji."],
-      ["Kontrola losowa", "Do modelu wprowadzana jest zmiana o dopasowanej normie, ale w kierunku ortogonalnym do kolumny dekodera cechy."],
-      ["Wielkość efektu", "Dla instrumentów pokazano obecność oraz udział nut i czasu trwania. Dla MusPy podano zmianę metryki względem generacji bazowej i kontroli losowej."],
-      ["Najlepszy prompt", "Domyślny prompt wybrano po analizie jako ten, na którym cecha najsilniej realizowała oczekiwany kierunek zmiany względem obu kontroli."],
-      ["Hipotezy jakościowe", "Zamrożone opisy cech pozostawiono w ich oryginalnym angielskim brzmieniu, aby tłumaczenie nie zmieniało treści ocenianej w eksperymencie."],
+      ["Siła interwencji", "Na każdym kroku generacji aktywacja cechy jest podnoszona co najmniej do percentyla p50, p75 albo p90 jej naturalnych dodatnich aktywacji. Domyślnie wyświetlany jest wariant p90."],
+      ["Kontrola eksperymentalna", "Kontrola wprowadza zmianę o dopasowanej normie w kierunku ortogonalnym do kolumny dekodera cechy SAE."],
+      ["Zakres materiału", "Dla dziesięciu wyróżnionych cech dostępnych jest po dziesięć promptów. Dla pozostałych cech udostępniono jeden prompt wybrany na podstawie odpowiedzi przy p90; wszystkie karty zawierają trzy poziomy interwencji."],
+      ["Wyniki ilościowe", "Dla instrumentów podano obecność oraz udział nut i czasu trwania. Dla cech MusPy przedstawiono zmianę metryki względem generacji bazowej i kontroli losowej."],
+      ["Opisy jakościowe", "Opisy cech użyte w ocenie pozostawiono w oryginalnym angielskim brzmieniu; zapobiega to zmianie znaczenia wskutek tłumaczenia."],
+      ["Status i identyfikator", "Statusy rozróżniają replikację przyczynową, wynik przesiewowy, ocenę jakościową i brak formalnego potwierdzenia; nie stanowią jednej skali istotności. Identyfikator cechy obowiązuje wyłącznie w obrębie danego modelu i konfiguracji SAE."],
     ],
     searchPlaceholder: "Szukaj cechy, instrumentu lub metryki…",
+    filterLabels: { search: "Wyszukiwanie cech", category: "Kategoria", model: "Model", status: "Status wyniku" },
     categories: [["all", "Wszystkie kategorie"], ["muspy", "Metryki MusPy"], ["instrument", "Instrumenty GM"], ["semantic", "Hipotezy jakościowe"]],
     models: [["all", "Oba modele"], ["midi_llm", "MIDI-LLM"], ["text2midi", "text2midi"]],
     statuses: [["all", "Wszystkie statusy"], ["replicated", "Zreplikowana"], ["screen_positive", "Sygnał w przesiewie"], ["reviewed", "Oceniona jakościowo"], ["not_confirmed", "Bez potwierdzenia"]],
-    availabilityNote: "* Dla tej cechy udostępniono jeden, najlepiej sterujący prompt; wszystkie trzy poziomy siły interwencji są dostępne.",
-    exportButton: "Eksportuj moje oceny (JSON)",
-    footerAudio:
-      'Audio zsyntetyzowano za pomocą FluidSynth i MuseScore_General.sf3 0.2, udostępnionego na licencji MIT. Każdy plik normalizowano niezależnie, dlatego głośność nie jest porównywalnym wynikiem. Pełne informacje zawiera <a href="SOUNDFONT_LICENSE.md">nota licencyjna</a>.',
-    footerIdentity:
-      "Identyfikator liczbowy cechy ma znaczenie wyłącznie razem z modelem i checkpointem SAE. „Sygnał w przesiewie” nie oznacza formalnego potwierdzenia po korekcie wielokrotnych porównań.",
-    featuredHeading: "Wyróżnione studia przypadków",
-    featuredIntro: "Przykłady wybrane ze względu na czytelność efektu; pełne statystyki obejmują wszystkie dostępne prompty.",
+    interventionsLink: "MI-MIDI — steering i podmiana aktywacji →",
+    licenseLink: "Licencja SoundFontu",
+    featuredHeading: "Wyróżnione cechy",
+    featuredIntro: "Dziesięć cech o najwyraźniejszych wynikach interwencji. Dla każdej udostępniono wszystkie dziesięć promptów.",
     atlasHeading: "Pozostałe cechy",
-    atlasIntro: "Pełny materiał przesiewowy, niezależnie od wyniku testu.",
+    atlasIntro: "Pozostałe badane cechy, niezależnie od wyniku testu. Każda karta zawiera jeden wybrany prompt i wszystkie trzy poziomy interwencji.",
     groups: { muspy: "MusPy", instrument: "instrument GM", semantic: "hipoteza jakościowa" },
     status: { replicated: "zreplikowana przyczynowo", confirmed: "potwierdzona", screen_positive: "sygnał w przesiewie", reviewed: "oceniona jakościowo", awaiting_review: "do oceny", not_confirmed: "brak formalnego potwierdzenia" },
     expand: "Rozwiń",
     collapse: "Zwiń",
-    featuredBadge: "wyróżniony przykład",
+    featuredBadge: "wyróżniona cecha",
     layer: "warstwa",
     feature: "cecha",
     prompt: "Prompt",
     strength: "Siła",
-    baseline: "Bez interwencji",
-    semantic: "Kierunek cechy SAE",
-    random: "Dopasowany kierunek losowy",
+    baseline: "Generacja bazowa",
+    semantic: "Interwencja w cechę SAE",
+    random: "Dopasowana kontrola losowa",
+    doses: { p50: "p50 — umiarkowana", p75: "p75 — podwyższona", p90: "p90 — silna" },
     downloadMp3: "Pobierz MP3",
     downloadMidi: "Pobierz MIDI",
     selectedMeasurement: "Pomiar dla wybranego przykładu",
+    evidenceDetails: "Wyniki i szczegóły cechy",
+    pianoRoll: "Rolka pianolowa",
     measure: "wielkość",
     baseShort: "bazowa",
     saeShort: "SAE",
@@ -87,61 +90,60 @@ const I18N = {
     activeHeldout: "aktywne przykłady odłożone",
     distractors: "dystraktory",
     confirmed: "potwierdzona",
-    ratingSummary: "Moja ocena odsłuchowa (zapisywana tylko w tej przeglądarce)",
-    ratingPlaceholder: "— wybierz ocenę —",
-    ratingOptions: [["aligned", "zmiana zgodna z hipotezą"], ["partial", "częściowo zgodna"], ["ambiguous", "niejednoznaczna"], ["misaligned", "niezgodna"], ["degenerate", "głównie degeneracja"]],
-    notePlaceholder: "Notatka…",
     featureCount: "cech",
   },
   en: {
-    pageTitle: "SAE feature atlas — symbolic music",
-    heroEyebrow: "Mechanistic interpretability of MIDI generation",
-    heroTitle: "SAE feature intervention atlas",
+    pageTitle: "MI-MIDI — SAE feature interventions",
+    metaDescription: "Audio samples from sparse-autoencoder feature interventions in text-to-MIDI models.",
+    heroEyebrow: "Mechanistic interpretability of text-to-MIDI models",
+    heroSection: "Sparse-autoencoder feature interventions",
     heroLead:
-      "Compare the same generation without intervention, after amplifying a learned feature direction, and after an equally strong change in a random direction. Highlighted cards show the clearest case studies; the full atlas includes every tested feature.",
-    statFeatures: "unique features",
-    statMuspy: "MusPy-selected features",
-    statInstruments: "instrument features",
-    statQualitative: "qualitative hypotheses",
-    statDoses: "intervention strengths",
-    methodSummary: "How should the comparisons be read?",
+      "This demo presents audio samples from sparse-autoencoder feature interventions in text2midi and MIDI-LLM, paired with baseline generations and matched random controls.",
+    guideTitle: "Reading the comparison",
+    guideText: "Each card represents one SAE feature identified at a particular model and layer. The three variants within a card use the same prompt and random seed.",
+    guideItems: [
+      ["baseline", "Baseline generation", "activations left unchanged"],
+      ["semantic", "SAE feature intervention", "selected feature amplified"],
+      ["random", "Random control", "matched-norm perturbation"],
+    ],
+    methodSummary: "Methodological details",
     method: [
-      ["Baseline generation", "The model generates without changing its activations. This is the reference for the same prompt and random seed."],
-      ["SAE feature direction", "At each step, feature activation is raised to at least the p50, p75 or p90 percentile of its natural positive activations."],
-      ["Random control", "The model receives a matched-norm change in a direction orthogonal to the feature decoder column."],
-      ["Effect size", "Instrument hypotheses report presence, note share and duration share. MusPy hypotheses report change relative to both baseline and random control."],
-      ["Strongest carrier", "The default carrier was selected after analysis as the prompt on which the feature most strongly produced the expected change relative to both controls."],
-      ["Qualitative hypotheses", "Frozen feature descriptions are shown in their original English wording so that translation cannot alter what was evaluated in the experiment."],
+      ["Intervention strength", "At every generation step, feature activation is raised to at least the p50, p75, or p90 percentile of its natural positive activations. The p90 variant is displayed by default."],
+      ["Experimental control", "The control applies a matched-norm perturbation in a direction orthogonal to the SAE feature decoder column."],
+      ["Material included", "All ten prompts are available for each of the ten highlighted features. One prompt selected by its p90 response is provided for every remaining feature; all cards include all three intervention strengths."],
+      ["Quantitative outcomes", "Instrument hypotheses report presence, note share, and duration share. MusPy features report changes relative to both the baseline and random control."],
+      ["Qualitative descriptions", "Feature descriptions used in the evaluation retain their original English wording."],
+      ["Status and identifier", "Statuses distinguish causal replication, a screen-positive result, qualitative review, and a lack of formal confirmation; they do not form a single significance scale. A feature identifier is specific to its model and SAE configuration."],
     ],
     searchPlaceholder: "Search by feature, instrument or metric…",
+    filterLabels: { search: "Feature search", category: "Category", model: "Model", status: "Result status" },
     categories: [["all", "All categories"], ["muspy", "MusPy metrics"], ["instrument", "GM instruments"], ["semantic", "Qualitative hypotheses"]],
     models: [["all", "Both models"], ["midi_llm", "MIDI-LLM"], ["text2midi", "text2midi"]],
     statuses: [["all", "All statuses"], ["replicated", "Replicated"], ["screen_positive", "Screen-positive"], ["reviewed", "Qualitatively reviewed"], ["not_confirmed", "Not confirmed"]],
-    availabilityNote: "* One strongest carrier prompt is available for this feature; all three intervention strengths are included.",
-    exportButton: "Export my ratings (JSON)",
-    footerAudio:
-      'Audio was synthesized with FluidSynth and MuseScore_General.sf3 0.2, distributed under the MIT license. Files were normalized independently, so loudness is not a comparable outcome. See the <a href="SOUNDFONT_LICENSE.md">full attribution notice</a>.',
-    footerIdentity:
-      "A numeric feature identifier is meaningful only together with its model and SAE checkpoint. “Screen-positive” does not mean formal confirmation after multiple-comparison correction.",
-    featuredHeading: "Highlighted case studies",
-    featuredIntro: "Examples selected for clarity of the effect; aggregate statistics use every available carrier prompt.",
+    interventionsLink: "MI-MIDI — steering and activation patching →",
+    licenseLink: "SoundFont license",
+    featuredHeading: "Highlighted features",
+    featuredIntro: "Ten features with the clearest intervention outcomes. All ten prompts are available for each feature.",
     atlasHeading: "Remaining features",
-    atlasIntro: "The complete screening material, independently of test outcome.",
+    atlasIntro: "All remaining tested features, independently of test outcome. Each card includes one selected prompt and all three intervention strengths.",
     groups: { muspy: "MusPy", instrument: "GM instrument", semantic: "qualitative hypothesis" },
     status: { replicated: "causally replicated", confirmed: "confirmed", screen_positive: "screen-positive", reviewed: "qualitatively reviewed", awaiting_review: "awaiting review", not_confirmed: "not formally confirmed" },
     expand: "Expand",
     collapse: "Collapse",
-    featuredBadge: "highlighted example",
+    featuredBadge: "highlighted feature",
     layer: "layer",
     feature: "feature",
     prompt: "Prompt",
     strength: "Strength",
-    baseline: "No intervention",
-    semantic: "SAE feature direction",
-    random: "Matched random direction",
+    baseline: "Baseline generation",
+    semantic: "SAE feature intervention",
+    random: "Matched random control",
+    doses: { p50: "p50 — moderate", p75: "p75 — elevated", p90: "p90 — strong" },
     downloadMp3: "Download MP3",
     downloadMidi: "Download MIDI",
     selectedMeasurement: "Measurement for the selected example",
+    evidenceDetails: "Feature results and details",
+    pianoRoll: "Piano roll",
     measure: "measure",
     baseShort: "baseline",
     saeShort: "SAE",
@@ -173,16 +175,12 @@ const I18N = {
     randomRecognized: "random control selected",
     tie: "tie",
     neither: "neither variant",
-    unavailable: "rating unavailable",
+    unavailable: "assessment unavailable",
     confidence: "confidence",
     carrierSigns: "carriers SAE/tie/random",
     activeHeldout: "active held-out examples",
     distractors: "distractors",
     confirmed: "confirmed",
-    ratingSummary: "My listening assessment (stored only in this browser)",
-    ratingPlaceholder: "— select a rating —",
-    ratingOptions: [["aligned", "change aligned with the hypothesis"], ["partial", "partly aligned"], ["ambiguous", "ambiguous"], ["misaligned", "not aligned"], ["degenerate", "mostly degeneration"]],
-    notePlaceholder: "Note…",
     featureCount: "features",
   },
 };
@@ -216,7 +214,6 @@ const PL_TITLES = {
 };
 
 let language = loadLanguage();
-let ratings = loadRatings();
 
 function t(key) {
   return I18N[language][key];
@@ -239,14 +236,6 @@ function pct(value, digits = 1) {
   return `${fmt(100 * Number(value), digits)}%`;
 }
 
-function loadRatings() {
-  try {
-    return JSON.parse(localStorage.getItem("sae-demo-ratings-v2") || "{}");
-  } catch (_error) {
-    return {};
-  }
-}
-
 function loadLanguage() {
   try {
     return localStorage.getItem("sae-demo-language") || (navigator.language.startsWith("pl") ? "pl" : "en");
@@ -264,14 +253,19 @@ function setOptions(element, values) {
 function applyLanguage() {
   document.documentElement.lang = language;
   document.title = t("pageTitle");
+  document.querySelector('meta[name="description"]').content = t("metaDescription");
   document.querySelectorAll("[data-text]").forEach((element) => {
-    const value = t(element.dataset.text);
-    if (["footerAudio", "footerIdentity"].includes(element.dataset.text)) element.innerHTML = value;
-    else element.textContent = value;
+    element.textContent = t(element.dataset.text);
   });
+  document.querySelector("#guideGrid").innerHTML = t("guideItems")
+    .map(([kind, title, body]) => `<div class="key-item key-${kind}"><b>${esc(title)}</b><span>${esc(body)}</span></div>`).join("");
   document.querySelector("#methodGrid").innerHTML = t("method")
     .map(([title, body]) => `<div><b>${title}</b>${body}</div>`).join("");
   document.querySelector("#search").placeholder = t("searchPlaceholder");
+  document.querySelector("#search").setAttribute("aria-label", t("filterLabels").search);
+  document.querySelector("#category").setAttribute("aria-label", t("filterLabels").category);
+  document.querySelector("#model").setAttribute("aria-label", t("filterLabels").model);
+  document.querySelector("#status").setAttribute("aria-label", t("filterLabels").status);
   setOptions(document.querySelector("#category"), t("categories"));
   setOptions(document.querySelector("#model"), t("models"));
   setOptions(document.querySelector("#status"), t("statuses"));
@@ -299,6 +293,10 @@ function displayTitle(card) {
 function scopeName(evidence) {
   if (language === "pl") return evidence.scope_pl || evidence.scope?.replaceAll("_", " ") || "";
   return evidence.scope?.replaceAll("_", " ") || "";
+}
+
+function modelName(model) {
+  return model === "midi_llm" ? "MIDI-LLM" : "text2midi";
 }
 
 function doseTable(evidence) {
@@ -358,32 +356,33 @@ function carrierOutcomeHtml(card, promptIndex, dose) {
     }
   }
   if (!rows.length) return "";
-  return `<b>${t("selectedMeasurement")}</b><table class="outcome-table"><thead><tr><th>${t("measure")}</th><th>${t("baseShort")}</th><th>${t("saeShort")}</th><th>${t("randomShort")}</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
+  return `<table class="outcome-table"><thead><tr><th>${t("measure")}</th><th>${t("baseShort")}</th><th>${t("saeShort")}</th><th>${t("randomShort")}</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
 }
 
 function sampleHtml(kind, title) {
-  return `<div class="sample ${kind}-sample" data-kind="${kind}"><h3>${title}</h3><audio controls preload="none"></audio><a class="roll-link" target="_blank"><img class="roll" loading="lazy" alt="Piano roll"></a><div class="downloads"><a class="mp3" download>${t("downloadMp3")}</a><a class="midi" download>${t("downloadMidi")}</a></div></div>`;
+  return `<div class="sample ${kind}-sample" data-kind="${kind}"><h3>${esc(title)}</h3><audio controls preload="none"></audio><a class="roll-link" target="_blank" rel="noreferrer"><img class="roll" loading="lazy" alt="${esc(`${t("pianoRoll")}: ${title}`)}"></a><div class="downloads"><a class="mp3" download>${t("downloadMp3")}</a><a class="midi" download>${t("downloadMidi")}</a></div></div>`;
+}
+
+function promptCountLabel(count) {
+  if (language === "pl") return count === 1 ? "1 prompt" : `${count} promptów`;
+  return count === 1 ? "1 prompt" : `${count} prompts`;
 }
 
 function cardHtml(card) {
-  const limited = card.carriers.length === 1;
   const badges = card.groups.map((group) => `<span class="badge ${group}">${t("groups")[group]}</span>`).join("");
   const scope = card.evidence.find((item) => item.type === "semantic");
-  return `<details class="card ${card.top_feature ? "featured" : ""}" data-id="${esc(card.candidate_id)}" ${card.feature_id === 995 ? "open" : ""}><summary class="card-head"><span class="head-main"><span class="identity">${esc(card.model)} · ${t("layer")} ${card.layer} · ${t("feature")} ${card.feature_id}${limited ? '<span class="limited-mark"> *</span>' : ""}</span><span class="card-title">${esc(displayTitle(card))}</span><span class="badges">${card.top_feature ? `<span class="badge featured">${t("featuredBadge")}</span>` : ""}${badges}${scope ? `<span class="badge">${esc(scopeName(scope))}</span>` : ""}</span></span><span class="head-side"><span class="status ${card.status}">${t("status")[card.status]}</span><span class="expand-label" aria-hidden="true">${t("expand")}</span></span></summary><div class="card-body"></div></details>`;
-}
-
-function ratingOptions() {
-  return `<option value="">${t("ratingPlaceholder")}</option>${t("ratingOptions").map(([value, label]) => `<option value="${value}">${label}</option>`).join("")}`;
+  return `<details class="card ${card.top_feature ? "featured" : ""}" data-id="${esc(card.candidate_id)}" ${card.feature_id === 995 ? "open" : ""}><summary class="card-head"><span class="head-main"><span class="card-title">${esc(displayTitle(card))}</span><span class="identity">${modelName(card.model)} · ${t("layer")} ${card.layer} · ${t("feature")} ${card.feature_id}</span><span class="badges">${card.top_feature ? `<span class="badge featured">${t("featuredBadge")}</span>` : ""}${badges}<span class="badge prompt-count">${promptCountLabel(card.carriers.length)}</span>${scope ? `<span class="badge">${esc(scopeName(scope))}</span>` : ""}</span></span><span class="head-side"><span class="status ${card.status}">${t("status")[card.status]}</span><span class="expand-label" aria-hidden="true">${t("expand")}</span></span></summary><div class="card-body"></div></details>`;
 }
 
 function cardBodyHtml(card) {
   const promptOptions = card.carriers.map((carrier) => {
     const label = card.carriers.length === 1
-      ? `${t("prompt")} ${carrier.prompt_idx + 1}*`
+      ? `${t("prompt")} ${carrier.prompt_idx + 1}`
       : `${carrier.prompt_idx + 1}/10`;
     return `<option value="${carrier.prompt_idx}" ${carrier.prompt_idx === card.best_prompt ? "selected" : ""}>${label}</option>`;
   }).join("");
-  return `<div class="hypotheses">${card.evidence.map(evidenceHtml).join("")}</div><div class="listen"><div class="listen-controls"><label>${t("prompt")} <select class="prompt">${promptOptions}</select></label><label>${t("strength")} <select class="dose"><option value="p50">p50</option><option value="p75">p75</option><option value="p90" selected>p90</option></select></label><span class="prompt-text"></span></div><div class="carrier-outcomes"></div><div class="compare">${sampleHtml("baseline", t("baseline"))}${sampleHtml("semantic", t("semantic"))}${sampleHtml("random", t("random"))}</div></div><details class="rating"><summary>${t("ratingSummary")}</summary><div class="rating-row"><select class="verdict">${ratingOptions()}</select><textarea class="note" placeholder="${t("notePlaceholder")}"></textarea></div></details>`;
+  const doses = ["p50", "p75", "p90"].map((dose) => `<option value="${dose}"${dose === "p90" ? " selected" : ""}>${esc(t("doses")[dose])}</option>`).join("");
+  return `<div class="listen"><div class="listen-controls"><label>${t("prompt")} <select class="prompt">${promptOptions}</select></label><label>${t("strength")} <select class="dose">${doses}</select></label></div><div class="prompt-display"><b>${t("prompt")}</b><span class="prompt-text"></span></div><div class="compare">${sampleHtml("baseline", t("baseline"))}${sampleHtml("semantic", t("semantic"))}${sampleHtml("random", t("random"))}</div><details class="selected-results"><summary>${t("selectedMeasurement")}</summary><div class="carrier-outcomes"></div></details></div><details class="evidence-panel"><summary>${t("evidenceDetails")}</summary><div class="hypotheses">${card.evidence.map(evidenceHtml).join("")}</div></details>`;
 }
 
 function updateMedia(element, card) {
@@ -392,7 +391,9 @@ function updateMedia(element, card) {
   if (promptIndex === undefined) return;
   const media = mediaFor(card, promptIndex, dose);
   element.querySelector(".prompt-text").textContent = media?.prompt || "";
-  element.querySelector(".carrier-outcomes").innerHTML = carrierOutcomeHtml(card, promptIndex, dose);
+  const outcomeHtml = carrierOutcomeHtml(card, promptIndex, dose);
+  element.querySelector(".carrier-outcomes").innerHTML = outcomeHtml;
+  element.querySelector(".selected-results").hidden = !outcomeHtml;
   for (const kind of ["baseline", "semantic", "random"]) {
     const box = element.querySelector(`[data-kind="${kind}"]`);
     const item = media?.[kind];
@@ -415,26 +416,6 @@ function updateMedia(element, card) {
   }
 }
 
-function restoreRating(element, card) {
-  const value = ratings[card.candidate_id] || {};
-  element.querySelector(".verdict").value = value.verdict || "";
-  element.querySelector(".note").value = value.note || "";
-  const save = () => {
-    ratings[card.candidate_id] = {
-      verdict: element.querySelector(".verdict").value,
-      note: element.querySelector(".note").value,
-      updated_at: new Date().toISOString(),
-    };
-    try {
-      localStorage.setItem("sae-demo-ratings-v2", JSON.stringify(ratings));
-    } catch (_error) {
-      // Ratings remain available in memory for the current session.
-    }
-  };
-  element.querySelector(".verdict").onchange = save;
-  element.querySelector(".note").oninput = save;
-}
-
 function hydrateCard(element, card) {
   if (element.dataset.hydrated === "true") return;
   element.querySelector(".card-body").innerHTML = cardBodyHtml(card);
@@ -442,7 +423,6 @@ function hydrateCard(element, card) {
   element.querySelector(".prompt").addEventListener("change", () => updateMedia(element, card));
   element.querySelector(".dose").addEventListener("change", () => updateMedia(element, card));
   updateMedia(element, card);
-  restoreRating(element, card);
 }
 
 function filteredCards() {
@@ -513,14 +493,5 @@ document.addEventListener("play", (event) => {
     });
   }
 }, true);
-document.querySelector("#export").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify({ schema_version: 1, exported_at: new Date().toISOString(), ratings }, null, 2)], { type: "application/json" });
-  const anchor = document.createElement("a");
-  anchor.href = URL.createObjectURL(blob);
-  anchor.download = "sae-demo-listening-ratings.json";
-  anchor.click();
-  URL.revokeObjectURL(anchor.href);
-});
-
 applyLanguage();
 render();

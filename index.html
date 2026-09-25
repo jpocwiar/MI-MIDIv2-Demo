@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta
       name="description"
-      content="Atlas interwencji w cechy rzadkiego autoenkodera modeli generujących muzykę symboliczną."
+      content="MI-MIDI — próbki dźwiękowe dla interwencji w cechy rzadkich autoenkoderów modeli text-to-MIDI."
     >
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="styles.css">
-    <title>Atlas cech SAE — muzyka symboliczna</title>
+    <title>MI-MIDI — interwencje w cechy SAE</title>
   </head>
   <body>
     <header class="hero">
@@ -18,16 +18,18 @@
         <button class="language-button" type="button" data-language="en">EN</button>
       </div>
       <div class="eyebrow" data-text="heroEyebrow"></div>
-      <h1 data-text="heroTitle"></h1>
+      <h1>MI-MIDI</h1>
+      <p class="hero-section" data-text="heroSection"></p>
       <p class="lead" data-text="heroLead"></p>
-      <div class="stats">
-        <div class="stat"><b>80</b><span data-text="statFeatures"></span></div>
-        <div class="stat"><b>15</b><span data-text="statMuspy"></span></div>
-        <div class="stat"><b>27</b><span data-text="statInstruments"></span></div>
-        <div class="stat"><b>48</b><span data-text="statQualitative"></span></div>
-        <div class="stat"><b>3</b><span data-text="statDoses"></span></div>
-      </div>
     </header>
+
+    <section class="guide" aria-labelledby="guideTitle">
+      <div class="guide-copy">
+        <h2 id="guideTitle" data-text="guideTitle"></h2>
+        <p data-text="guideText"></p>
+      </div>
+      <div class="comparison-key" id="guideGrid"></div>
+    </section>
 
     <section class="method">
       <details>
@@ -42,7 +44,7 @@
         <select id="category"></select>
         <select id="model"></select>
         <select id="status"></select>
-        <span id="result-count"></span>
+        <span id="result-count" aria-live="polite"></span>
         <div class="toolbar-language" aria-label="Language">
           <button class="language-button" type="button" data-language="pl">PL</button>
           <button class="language-button" type="button" data-language="en">EN</button>
@@ -51,14 +53,12 @@
     </div>
 
     <main>
-      <p class="availability-note" data-text="availabilityNote"></p>
       <div id="cards"></div>
     </main>
 
     <footer class="footer">
-      <button class="export" id="export" data-text="exportButton"></button>
-      <p data-text="footerAudio"></p>
-      <p data-text="footerIdentity"></p>
+      <a href="https://jpocwiar.github.io/MI-MIDI-Demo/" data-text="interventionsLink"></a>
+      <a href="SOUNDFONT_LICENSE.md" data-text="licenseLink"></a>
     </footer>
 
     <script src="library.js"></script>
