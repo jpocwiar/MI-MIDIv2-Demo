@@ -170,40 +170,84 @@ h1 {
 .key-semantic { border-top-color: var(--green); }
 .key-random { border-top-color: #888; }
 
-.method {
+.usage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 1rem;
   max-width: var(--content);
   padding: 0 1.25rem;
   margin: 0 auto 1.3rem;
 }
 
-.method details {
-  padding: 0.8rem 1rem;
-  background: #e8eee9;
-  border: 1px solid #cfdbd2;
+.usage-panel,
+.legend-panel {
+  padding: 1rem 1.1rem;
+  background: rgba(255, 254, 250, 0.72);
+  border: 1px solid var(--line);
   border-radius: 12px;
 }
 
-.method summary {
-  font-weight: 720;
-  cursor: pointer;
+.usage h2 {
+  margin: 0 0 0.75rem;
+  font: 700 1.2rem Georgia, serif;
 }
 
-.method-grid {
+.usage-steps,
+.status-legend {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-top: 0.9rem;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
 }
 
-.method-grid div {
-  padding: 0.8rem;
-  background: rgba(255, 255, 255, 0.55);
+.usage-steps {
+  list-style: none;
+  counter-reset: usage-step;
+}
+
+.usage-steps li,
+.status-legend > div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  align-items: start;
+  padding: 0.65rem 0.7rem;
+  background: #fff;
+  border: 1px solid #e5e2da;
   border-radius: 8px;
 }
 
-.method-grid b {
-  display: block;
-  margin-bottom: 0.25rem;
+.usage-steps li::before {
+  counter-increment: usage-step;
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #fff;
+  content: counter(usage-step);
+  place-items: center;
+  background: var(--green-dark);
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.usage-steps li b,
+.usage-steps li span {
+  grid-column: 2;
+}
+
+.usage-steps li span,
+.status-legend > div > span:last-child {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.status-legend > div {
+  align-items: center;
+}
+
+.status-legend .status {
+  min-width: 110px;
 }
 
 .toolbar {
@@ -377,16 +421,11 @@ main {
   background: var(--mint);
 }
 
-.badge.prompt-count {
-  color: #4f5c54;
-  background: #e8eee9;
-}
-
 .status {
   padding: 0.32rem 0.65rem;
   font-size: 0.74rem;
   font-weight: 800;
-  max-width: 260px;
+  white-space: nowrap;
   text-align: center;
   border-radius: 999px;
 }
@@ -662,6 +701,10 @@ summary:focus-visible {
     grid-template-columns: 1fr 1fr;
   }
 
+  .usage {
+    grid-template-columns: 1fr;
+  }
+
   .toolbar-language {
     display: flex;
   }
@@ -696,5 +739,7 @@ summary:focus-visible {
   }
 
   .comparison-key { grid-template-columns: 1fr; }
+  .status-legend > div { grid-template-columns: 1fr; }
+  .status-legend .status { min-width: 0; justify-self: start; }
   .prompt-display { grid-template-columns: 1fr; gap: 0.2rem; }
 }

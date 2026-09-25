@@ -8,29 +8,32 @@ const I18N = {
     heroSection: "Interwencje w cechy rzadkich autoenkoderów",
     heroLead:
       "Niniejsze demo udostępnia próbki dźwiękowe uzyskane w badaniach opisanych w rozdziale „Rzadkie autoenkodery” pracy magisterskiej. Materiał obejmuje cechy modeli text2midi i MIDI-LLM wraz z generacjami bazowymi, interwencjami w kierunku cechy i kontrolnymi interwencjami w kierunku losowym.",
-    guideTitle: "Interpretacja porównania",
+    guideTitle: "Porównywane warianty",
     guideText: "Każda karta odpowiada jednej cesze rzadkiego autoenkodera wyodrębnionej w określonym modelu i warstwie. Trzy warianty w obrębie karty wykorzystują ten sam opis wejściowy i ziarno losowe.",
     guideItems: [
       ["baseline", "Generacja bazowa", "bez zmiany aktywacji"],
       ["semantic", "Interwencja w kierunku cechy", "wzmocnienie aktywacji wybranej cechy"],
       ["random", "Kontrola: kierunek losowy", "interwencja w kierunku losowym o tej samej normie"],
     ],
-    methodSummary: "Szczegóły metodyczne",
-    method: [
-      ["Poziom interwencji", "Na każdym kroku generacji aktywacja cechy jest podnoszona co najmniej do poziomu P50, P75 albo P90 jej naturalnych dodatnich aktywacji. Domyślnie wyświetlany jest poziom P90."],
-      ["Kontrola eksperymentalna", "Kontrola wprowadza zmianę o tej samej normie w kierunku losowym ortogonalnym do kierunku wyznaczonego przez dekoder cechy rzadkiego autoenkodera."],
-      ["Zakres materiału", "Dla dziesięciu wyróżnionych cech dostępnych jest po dziesięć opisów wejściowych. Dla pozostałych cech udostępniono jeden opis wybrany na podstawie odpowiedzi przy P90; wszystkie karty zawierają trzy poziomy interwencji."],
-      ["Wyniki ilościowe", "Dla programów instrumentów MIDI podano obecność oraz udział nut i czasu trwania. Dla cech MusPy przedstawiono zmianę metryki względem generacji bazowej i interwencji w kierunku losowym."],
-      ["Opisy jakościowe", "Opisy cech użyte w ocenie pozostawiono w oryginalnym angielskim brzmieniu; zapobiega to zmianie znaczenia wskutek tłumaczenia."],
-      ["Ocena wyniku", "„Potwierdzony na nowych opisach” oznacza wynik powtórzony na rozłącznym zbiorze opisów wejściowych. „Kandydat do potwierdzenia” pochodzi z etapu eksploracyjnego. „Ocena zgodności z opisem” oznacza objęcie cechy zaślepioną oceną rolek pianolowych, a „wynik niepotwierdzony” — brak potwierdzenia przewidywanej zmiany."],
-      ["Audyt przykładów", "Ostrzeżenia audytu oznaczają koncentrację aktywacji na tym samym tokenie, szczyt przypadający na kategorię składniową zapisu albo dużą różnicę liczby nut między przykładami aktywnymi i nieaktywnymi."],
-      ["Identyfikator cechy", "Numer cechy obowiązuje wyłącznie w obrębie danego modelu i konfiguracji rzadkiego autoenkodera; nie identyfikuje tej samej cechy w innych autoenkoderach."],
+    usageTitle: "Obsługa kart",
+    usageSteps: [
+      ["Rozwinięcie karty", "Nagłówek cechy otwiera lub zamyka jej odsłuchy."],
+      ["Zmiana przykładu", "W kartach z wieloma próbkami lista „Opis wejściowy” przełącza jednocześnie treść opisu, trzy nagrania, rolki pianolowe i pomiar."],
+      ["Zmiana poziomu", "Lista „Poziom interwencji” przełącza P50, P75 i P90 dla kierunku cechy oraz kontroli losowej. Domyślnie wyświetlany jest poziom P90."],
+      ["Wyniki", "Pomiar wybranego przykładu oraz pełne wyniki cechy można rozwinąć niezależnie pod odsłuchami."],
+    ],
+    legendTitle: "Oznaczenia wyników",
+    resultLegend: [
+      ["replicated", "potwierdzony", "wynik powtórzony na rozłącznym zbiorze opisów wejściowych"],
+      ["screen_positive", "kandydat", "dodatni wynik etapu eksploracyjnego, wymagający niezależnego potwierdzenia"],
+      ["reviewed", "oceniony", "cecha objęta zaślepioną oceną zgodności z wcześniej ustalonym opisem"],
+      ["not_confirmed", "niepotwierdzony", "przewidywana zmiana nie została potwierdzona"],
     ],
     searchPlaceholder: "Szukaj cechy, instrumentu lub metryki…",
     filterLabels: { search: "Wyszukiwanie cech", category: "Kategoria", model: "Model", status: "Ocena wyniku" },
     categories: [["all", "Wszystkie kategorie"], ["muspy", "Metryki MusPy"], ["instrument", "Programy instrumentów MIDI"], ["semantic", "Opisy jakościowe"]],
     models: [["all", "Oba modele"], ["midi_llm", "MIDI-LLM"], ["text2midi", "text2midi"]],
-    statuses: [["all", "Wszystkie wyniki"], ["replicated", "Potwierdzone na nowych opisach"], ["screen_positive", "Kandydaci do potwierdzenia"], ["reviewed", "Ocena zgodności z opisem"], ["not_confirmed", "Wyniki niepotwierdzone"]],
+    statuses: [["all", "Wszystkie oceny"], ["replicated", "Potwierdzone"], ["screen_positive", "Kandydaci"], ["reviewed", "Ocenione"], ["not_confirmed", "Niepotwierdzone"]],
     interventionsLink: "MI-MIDI — sterowanie wektorami i podmiana aktywacji →",
     licenseLink: "Licencja SoundFontu",
     featuredHeading: "Wyróżnione cechy",
@@ -38,12 +41,13 @@ const I18N = {
     atlasHeading: "Pozostałe cechy",
     atlasIntro: "Pozostałe badane cechy, niezależnie od wyniku testu. Każda karta zawiera jeden wybrany opis wejściowy i wszystkie trzy poziomy interwencji.",
     groups: { muspy: "metryka MusPy", instrument: "program instrumentu MIDI", semantic: "opis jakościowy" },
-    status: { replicated: "wynik potwierdzony na nowych opisach", confirmed: "wynik potwierdzony", screen_positive: "kandydat do potwierdzenia", reviewed: "ocena zgodności z opisem", awaiting_review: "ocena nieprzeprowadzona", not_confirmed: "wynik niepotwierdzony" },
+    status: { replicated: "potwierdzony", confirmed: "potwierdzony", screen_positive: "kandydat", reviewed: "oceniony", awaiting_review: "bez oceny", not_confirmed: "niepotwierdzony" },
     expand: "Rozwiń",
     collapse: "Zwiń",
     featuredBadge: "wyróżniona cecha",
     layer: "warstwa",
     feature: "cecha",
+    example: "Przykład",
     prompt: "Opis wejściowy",
     strength: "Poziom interwencji",
     baseline: "Generacja bazowa",
@@ -101,29 +105,32 @@ const I18N = {
     heroSection: "Sparse-autoencoder feature interventions",
     heroLead:
       "This demo presents audio samples from sparse-autoencoder feature interventions in text2midi and MIDI-LLM, paired with baseline generations and matched random controls.",
-    guideTitle: "Reading the comparison",
+    guideTitle: "Compared variants",
     guideText: "Each card represents one SAE feature identified at a particular model and layer. The three variants within a card use the same prompt and random seed.",
     guideItems: [
       ["baseline", "Baseline generation", "activations left unchanged"],
       ["semantic", "Feature-direction intervention", "selected feature activation increased"],
       ["random", "Random-direction control", "intervention with the same norm"],
     ],
-    methodSummary: "Methodological details",
-    method: [
-      ["Intervention level", "At every generation step, feature activation is raised to at least level P50, P75, or P90 of its natural positive activations. Level P90 is displayed by default."],
-      ["Experimental control", "The control applies an intervention with the same norm in a random direction orthogonal to the SAE feature decoder direction."],
-      ["Material included", "All ten prompts are available for each of the ten highlighted features. One prompt selected by its P90 response is provided for every remaining feature; all cards include all three intervention levels."],
-      ["Quantitative outcomes", "MIDI instrument programs are evaluated by presence, note share, and duration share. MusPy features report changes relative to both the baseline and random-direction intervention."],
-      ["Qualitative descriptions", "Feature descriptions used in the evaluation retain their original English wording."],
-      ["Result assessment", "“Confirmed on held-out prompts” denotes a result repeated on a disjoint prompt set. An “exploratory candidate” requires independent confirmation. “Blind description assessment” denotes evaluation of feature and random interventions against a previously fixed description. “Not confirmed” denotes no confirmation of the predicted change."],
-      ["Example audit", "Audit warnings indicate activation concentrated on the same token, a peak on a tokenization-syntax category, or a large note-count difference between active and inactive examples."],
-      ["Feature identifier", "A feature number is specific to its model and SAE configuration; it does not identify the same feature across different autoencoders."],
+    usageTitle: "Using the cards",
+    usageSteps: [
+      ["Open a card", "Select a feature heading to open or close its listening panel."],
+      ["Change the example", "On cards with multiple samples, the Prompt selector changes the prompt text, all three recordings, piano rolls, and the displayed measurement together."],
+      ["Change the level", "The Intervention level selector switches P50, P75, and P90 for both the feature direction and random control. P90 is shown by default."],
+      ["View results", "The measurement for the selected example and the complete feature results can be expanded independently below the recordings."],
+    ],
+    legendTitle: "Result labels",
+    resultLegend: [
+      ["replicated", "confirmed", "the result was repeated on a disjoint set of held-out prompts"],
+      ["screen_positive", "candidate", "a positive exploratory result that requires independent confirmation"],
+      ["reviewed", "reviewed", "the feature underwent a blind assessment against its previously fixed description"],
+      ["not_confirmed", "not confirmed", "the predicted change was not confirmed"],
     ],
     searchPlaceholder: "Search by feature, instrument or metric…",
     filterLabels: { search: "Feature search", category: "Category", model: "Model", status: "Result assessment" },
     categories: [["all", "All categories"], ["muspy", "MusPy metrics"], ["instrument", "MIDI instrument programs"], ["semantic", "Qualitative descriptions"]],
     models: [["all", "Both models"], ["midi_llm", "MIDI-LLM"], ["text2midi", "text2midi"]],
-    statuses: [["all", "All results"], ["replicated", "Confirmed on held-out prompts"], ["screen_positive", "Exploratory candidates"], ["reviewed", "Blind description assessment"], ["not_confirmed", "Not confirmed"]],
+    statuses: [["all", "All assessments"], ["replicated", "Confirmed"], ["screen_positive", "Candidates"], ["reviewed", "Reviewed"], ["not_confirmed", "Not confirmed"]],
     interventionsLink: "MI-MIDI — steering and activation patching →",
     licenseLink: "SoundFont license",
     featuredHeading: "Highlighted features",
@@ -131,12 +138,13 @@ const I18N = {
     atlasHeading: "Remaining features",
     atlasIntro: "All remaining tested features, independently of test outcome. Each card includes one selected prompt and all three intervention strengths.",
     groups: { muspy: "MusPy metric", instrument: "MIDI instrument program", semantic: "qualitative description" },
-    status: { replicated: "confirmed on held-out prompts", confirmed: "confirmed result", screen_positive: "exploratory candidate", reviewed: "blind description assessment", awaiting_review: "assessment pending", not_confirmed: "not confirmed" },
+    status: { replicated: "confirmed", confirmed: "confirmed", screen_positive: "candidate", reviewed: "reviewed", awaiting_review: "pending", not_confirmed: "not confirmed" },
     expand: "Expand",
     collapse: "Collapse",
     featuredBadge: "highlighted feature",
     layer: "layer",
     feature: "feature",
+    example: "Example",
     prompt: "Prompt",
     strength: "Intervention level",
     baseline: "Baseline generation",
@@ -263,8 +271,10 @@ function applyLanguage() {
   });
   document.querySelector("#guideGrid").innerHTML = t("guideItems")
     .map(([kind, title, body]) => `<div class="key-item key-${kind}"><b>${esc(title)}</b><span>${esc(body)}</span></div>`).join("");
-  document.querySelector("#methodGrid").innerHTML = t("method")
-    .map(([title, body]) => `<div><b>${title}</b>${body}</div>`).join("");
+  document.querySelector("#usageSteps").innerHTML = t("usageSteps")
+    .map(([title, body]) => `<li><b>${esc(title)}</b><span>${esc(body)}</span></li>`).join("");
+  document.querySelector("#statusLegend").innerHTML = t("resultLegend")
+    .map(([status, label, body]) => `<div><span class="status ${status}">${esc(label)}</span><span>${esc(body)}</span></div>`).join("");
   document.querySelector("#search").placeholder = t("searchPlaceholder");
   document.querySelector("#search").setAttribute("aria-label", t("filterLabels").search);
   document.querySelector("#category").setAttribute("aria-label", t("filterLabels").category);
@@ -369,30 +379,26 @@ function sampleHtml(kind, title) {
   return `<div class="sample ${kind}-sample" data-kind="${kind}"><h3>${esc(title)}</h3><audio controls preload="none"></audio><a class="roll-link" target="_blank" rel="noreferrer"><img class="roll" loading="lazy" alt="${esc(`${t("pianoRoll")}: ${title}`)}"></a><div class="downloads"><a class="mp3" download>${t("downloadMp3")}</a><a class="midi" download>${t("downloadMidi")}</a></div></div>`;
 }
 
-function promptCountLabel(count) {
-  if (language === "pl") return count === 1 ? "1 opis wejściowy" : `${count} opisów wejściowych`;
-  return count === 1 ? "1 prompt" : `${count} prompts`;
-}
-
 function cardHtml(card) {
   const badges = card.groups.map((group) => `<span class="badge ${group}">${t("groups")[group]}</span>`).join("");
   const scope = card.evidence.find((item) => item.type === "semantic");
-  return `<details class="card ${card.top_feature ? "featured" : ""}" data-id="${esc(card.candidate_id)}" ${card.feature_id === 995 ? "open" : ""}><summary class="card-head"><span class="head-main"><span class="card-title">${esc(displayTitle(card))}</span><span class="identity">${modelName(card.model)} · ${t("layer")} ${card.layer} · ${t("feature")} ${card.feature_id}</span><span class="badges">${card.top_feature ? `<span class="badge featured">${t("featuredBadge")}</span>` : ""}${badges}<span class="badge prompt-count">${promptCountLabel(card.carriers.length)}</span>${scope ? `<span class="badge">${esc(scopeName(scope))}</span>` : ""}</span></span><span class="head-side"><span class="status ${card.status}">${t("status")[card.status]}</span><span class="expand-label" aria-hidden="true">${t("expand")}</span></span></summary><div class="card-body"></div></details>`;
+  return `<details class="card ${card.top_feature ? "featured" : ""}" data-id="${esc(card.candidate_id)}" ${card.feature_id === 995 ? "open" : ""}><summary class="card-head"><span class="head-main"><span class="card-title">${esc(displayTitle(card))}</span><span class="identity">${modelName(card.model)} · ${t("layer")} ${card.layer} · ${t("feature")} ${card.feature_id}</span><span class="badges">${card.top_feature ? `<span class="badge featured">${t("featuredBadge")}</span>` : ""}${badges}${scope ? `<span class="badge">${esc(scopeName(scope))}</span>` : ""}</span></span><span class="head-side"><span class="status ${card.status}">${t("status")[card.status]}</span><span class="expand-label" aria-hidden="true">${t("expand")}</span></span></summary><div class="card-body"></div></details>`;
 }
 
 function cardBodyHtml(card) {
-  const promptOptions = card.carriers.map((carrier) => {
-    const label = card.carriers.length === 1
-      ? `${t("prompt")} ${carrier.prompt_idx + 1}`
-      : `${carrier.prompt_idx + 1}/10`;
-    return `<option value="${carrier.prompt_idx}" ${carrier.prompt_idx === card.best_prompt ? "selected" : ""}>${label}</option>`;
-  }).join("");
+  const selectedPrompt = card.carriers.some((carrier) => carrier.prompt_idx === card.best_prompt)
+    ? card.best_prompt
+    : card.carriers[0].prompt_idx;
+  const promptControl = card.carriers.length > 1
+    ? `<label>${t("prompt")} <select class="prompt">${card.carriers.map((carrier, index) => `<option value="${carrier.prompt_idx}" ${carrier.prompt_idx === selectedPrompt ? "selected" : ""}>${t("example")} ${index + 1}</option>`).join("")}</select></label>`
+    : "";
   const doses = ["p50", "p75", "p90"].map((dose) => `<option value="${dose}"${dose === "p90" ? " selected" : ""}>${esc(t("doses")[dose])}</option>`).join("");
-  return `<div class="listen"><div class="listen-controls"><label>${t("prompt")} <select class="prompt">${promptOptions}</select></label><label>${t("strength")} <select class="dose">${doses}</select></label></div><div class="prompt-display"><b>${t("prompt")}</b><span class="prompt-text"></span></div><div class="compare">${sampleHtml("baseline", t("baseline"))}${sampleHtml("semantic", t("semantic"))}${sampleHtml("random", t("random"))}</div><details class="selected-results"><summary>${t("selectedMeasurement")}</summary><div class="carrier-outcomes"></div></details></div><details class="evidence-panel"><summary>${t("evidenceDetails")}</summary><div class="hypotheses">${card.evidence.map(evidenceHtml).join("")}</div></details>`;
+  return `<div class="listen" data-default-prompt="${selectedPrompt}"><div class="listen-controls">${promptControl}<label>${t("strength")} <select class="dose">${doses}</select></label></div><div class="prompt-display"><b>${t("prompt")}</b><span class="prompt-text"></span></div><div class="compare">${sampleHtml("baseline", t("baseline"))}${sampleHtml("semantic", t("semantic"))}${sampleHtml("random", t("random"))}</div><details class="selected-results"><summary>${t("selectedMeasurement")}</summary><div class="carrier-outcomes"></div></details></div><details class="evidence-panel"><summary>${t("evidenceDetails")}</summary><div class="hypotheses">${card.evidence.map(evidenceHtml).join("")}</div></details>`;
 }
 
 function updateMedia(element, card) {
-  const promptIndex = element.querySelector(".prompt")?.value;
+  const promptIndex = element.querySelector(".prompt")?.value
+    ?? element.querySelector(".listen")?.dataset.defaultPrompt;
   const dose = element.querySelector(".dose")?.value;
   if (promptIndex === undefined) return;
   const media = mediaFor(card, promptIndex, dose);
@@ -426,7 +432,7 @@ function hydrateCard(element, card) {
   if (element.dataset.hydrated === "true") return;
   element.querySelector(".card-body").innerHTML = cardBodyHtml(card);
   element.dataset.hydrated = "true";
-  element.querySelector(".prompt").addEventListener("change", () => updateMedia(element, card));
+  element.querySelector(".prompt")?.addEventListener("change", () => updateMedia(element, card));
   element.querySelector(".dose").addEventListener("change", () => updateMedia(element, card));
   updateMedia(element, card);
 }
