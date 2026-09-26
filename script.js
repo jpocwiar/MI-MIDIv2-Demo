@@ -15,13 +15,8 @@ const I18N = {
       ["semantic", "Interwencja w kierunku cechy", "wzmocnienie aktywacji wybranej cechy"],
       ["random", "Kontrola: kierunek losowy", "interwencja w kierunku losowym o tej samej normie"],
     ],
-    usageTitle: "Obsługa kart",
-    usageSteps: [
-      ["Rozwinięcie karty", "Nagłówek cechy otwiera lub zamyka jej odsłuchy."],
-      ["Zmiana przykładu", "W kartach z wieloma próbkami lista „Opis wejściowy” przełącza jednocześnie treść opisu, trzy nagrania, rolki pianolowe i pomiar."],
-      ["Zmiana poziomu", "Lista „Poziom interwencji” przełącza P50, P75 i P90 dla kierunku cechy oraz kontroli losowej. Domyślnie wyświetlany jest poziom P90."],
-      ["Wyniki", "Pomiar wybranego przykładu oraz pełne wyniki cechy można rozwinąć niezależnie pod odsłuchami."],
-    ],
+    usageTitle: "Przełączanie próbek",
+    usageText: "W kartach z wieloma próbkami lista „Opis wejściowy” przełącza opis, nagrania i rolki pianolowe. Lista „Poziom interwencji” pozwala porównać P50, P75 i P90, przy czym domyślnie wyświetlany jest poziom P90.",
     legendTitle: "Oznaczenia wyników",
     resultLegend: [
       ["replicated", "potwierdzony", "wynik powtórzony na rozłącznym zbiorze opisów wejściowych"],
@@ -112,13 +107,8 @@ const I18N = {
       ["semantic", "Feature-direction intervention", "selected feature activation increased"],
       ["random", "Random-direction control", "intervention with the same norm"],
     ],
-    usageTitle: "Using the cards",
-    usageSteps: [
-      ["Open a card", "Select a feature heading to open or close its listening panel."],
-      ["Change the example", "On cards with multiple samples, the Prompt selector changes the prompt text, all three recordings, piano rolls, and the displayed measurement together."],
-      ["Change the level", "The Intervention level selector switches P50, P75, and P90 for both the feature direction and random control. P90 is shown by default."],
-      ["View results", "The measurement for the selected example and the complete feature results can be expanded independently below the recordings."],
-    ],
+    usageTitle: "Switching samples",
+    usageText: "On cards with multiple samples, the Prompt selector changes the prompt, recordings, and piano rolls. The Intervention level selector switches between P50, P75, and P90, with P90 shown by default.",
     legendTitle: "Result labels",
     resultLegend: [
       ["replicated", "confirmed", "the result was repeated on a disjoint set of held-out prompts"],
@@ -271,8 +261,6 @@ function applyLanguage() {
   });
   document.querySelector("#guideGrid").innerHTML = t("guideItems")
     .map(([kind, title, body]) => `<div class="key-item key-${kind}"><b>${esc(title)}</b><span>${esc(body)}</span></div>`).join("");
-  document.querySelector("#usageSteps").innerHTML = t("usageSteps")
-    .map(([title, body]) => `<li><b>${esc(title)}</b><span>${esc(body)}</span></li>`).join("");
   document.querySelector("#statusLegend").innerHTML = t("resultLegend")
     .map(([status, label, body]) => `<div><span class="status ${status}">${esc(label)}</span><span>${esc(body)}</span></div>`).join("");
   document.querySelector("#search").placeholder = t("searchPlaceholder");

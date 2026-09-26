@@ -192,7 +192,6 @@ h1 {
   font: 700 1.2rem Georgia, serif;
 }
 
-.usage-steps,
 .status-legend {
   display: grid;
   gap: 0.55rem;
@@ -200,12 +199,6 @@ h1 {
   padding: 0;
 }
 
-.usage-steps {
-  list-style: none;
-  counter-reset: usage-step;
-}
-
-.usage-steps li,
 .status-legend > div {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -217,27 +210,9 @@ h1 {
   border-radius: 8px;
 }
 
-.usage-steps li::before {
-  counter-increment: usage-step;
-  display: grid;
-  width: 1.5rem;
-  height: 1.5rem;
-  color: #fff;
-  content: counter(usage-step);
-  place-items: center;
-  background: var(--green-dark);
-  border-radius: 50%;
-  font-size: 0.72rem;
-  font-weight: 800;
-}
-
-.usage-steps li b,
-.usage-steps li span {
-  grid-column: 2;
-}
-
-.usage-steps li span,
+.usage-panel p,
 .status-legend > div > span:last-child {
+  margin: 0;
   color: var(--muted);
   font-size: 0.82rem;
 }
