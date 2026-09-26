@@ -15,8 +15,7 @@ const I18N = {
       ["semantic", "Interwencja w kierunku cechy", "wzmocnienie aktywacji wybranej cechy"],
       ["random", "Kontrola: kierunek losowy", "interwencja w kierunku losowym o tej samej normie"],
     ],
-    usageTitle: "Przełączanie próbek",
-    usageText: "W kartach z wieloma próbkami lista „Opis wejściowy” przełącza opis, nagrania i rolki pianolowe. Lista „Poziom interwencji” pozwala porównać P50, P75 i P90, przy czym domyślnie wyświetlany jest poziom P90.",
+    usageText: "„Opis wejściowy” przełącza przykłady bazowe, na których wykonywano interwencje. Lista „Poziom interwencji” pozwala porównać siłę interwencji (P50, P75 i P90).",
     legendTitle: "Oznaczenia wyników",
     resultLegend: [
       ["replicated", "potwierdzony", "wynik powtórzony na rozłącznym zbiorze opisów wejściowych"],
@@ -107,8 +106,7 @@ const I18N = {
       ["semantic", "Feature-direction intervention", "selected feature activation increased"],
       ["random", "Random-direction control", "intervention with the same norm"],
     ],
-    usageTitle: "Switching samples",
-    usageText: "On cards with multiple samples, the Prompt selector changes the prompt, recordings, and piano rolls. The Intervention level selector switches between P50, P75, and P90, with P90 shown by default.",
+    usageText: "The Prompt selector switches between the baseline examples on which the interventions were performed. The Intervention level selector compares intervention strengths P50, P75, and P90.",
     legendTitle: "Result labels",
     resultLegend: [
       ["replicated", "confirmed", "the result was repeated on a disjoint set of held-out prompts"],
