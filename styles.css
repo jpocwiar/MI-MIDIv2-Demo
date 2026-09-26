@@ -175,12 +175,13 @@ h1 {
 .key-random { border-top-color: #888; }
 
 .usage {
+  width: calc(100% - 2.5rem);
   max-width: var(--content);
-  padding: 0 1.25rem;
   margin: 0 auto 1.3rem;
 }
 
 .legend-panel {
+  width: 100%;
   padding: 1rem 1.1rem;
   background: rgba(255, 254, 250, 0.72);
   border: 1px solid var(--line);
@@ -195,7 +196,7 @@ h1 {
 .status-legend {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.55rem;
+  gap: 0.45rem;
   margin: 0;
   padding: 0;
 }
@@ -205,7 +206,7 @@ h1 {
   grid-template-columns: auto 1fr;
   gap: 0.65rem;
   align-items: start;
-  padding: 0.65rem 0.7rem;
+  padding: 0.55rem 0.7rem;
   background: #fff;
   border: 1px solid #e5e2da;
   border-radius: 8px;
